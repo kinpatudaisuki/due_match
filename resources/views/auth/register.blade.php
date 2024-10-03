@@ -16,6 +16,13 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Area -->
+        <div class="mt-4">
+            <x-input-label for="area" :value="__('都道府県(都府県不要)')" />
+            <x-text-input id="area" class="block mt-1 w-full" type="text" name="area" :value="old('area')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('area')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
