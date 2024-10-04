@@ -50,8 +50,8 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
-    public function room_users() {
-        return $this->hasMany(RoomUser::class);
+    public function rooms() {
+        return $this->belongsToMany(Room::class);
     }
 
     public function friends() {
@@ -62,7 +62,7 @@ class User extends Authenticatable
         return $this->hasMany(Block::class);
     }
 
-    public function user_formats() {
-        return $this->hasMany(UserFormat::class);
+    public function formats() {
+        return $this->belongsToMany(Format::class);
     }
 }

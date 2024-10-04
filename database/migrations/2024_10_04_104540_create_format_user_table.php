@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('room_users', function (Blueprint $table) {
+        Schema::create('format_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('room_id');
+            $table->foreignId('user_id')->onDelete('cascade');
+            $table->foreignId('format_id');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('room_users');
+        Schema::dropIfExists('format_user');
     }
 };

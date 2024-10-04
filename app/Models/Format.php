@@ -9,7 +9,7 @@ class Format extends Model
 {
     use HasFactory;
 
-    public function user_formats() {
-        return $this->hasMany(UserFormat::class);
+    public function users() {
+        return $this->belongsToMany(User::class);
     }
 }
