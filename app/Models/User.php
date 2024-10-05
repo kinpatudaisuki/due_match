@@ -51,7 +51,7 @@ class User extends Authenticatable
     }
 
     public function rooms() {
-        return $this->belongsToMany(Room::class);
+        return $this->belongsToMany(Room::class)->withTimestamps();
     }
 
     public function friends() {
@@ -63,6 +63,6 @@ class User extends Authenticatable
     }
 
     public function formats() {
-        return $this->belongsToMany(Format::class);
+        return $this->belongsToMany(Format::class)->withTimestamps();
     }
 }

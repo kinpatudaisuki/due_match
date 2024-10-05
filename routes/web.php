@@ -15,6 +15,8 @@ Route::get('/dashboard', function () {
 
 Route::get('user/index', [UserController::class, 'index'])->name('user.index');
 
+Route::post('room/store', [RoomController::class, 'store'])->name('room.store');
+
 Route::get('room/index/{room}', [RoomController::class, 'index'])->name('room.index');
 
 Route::middleware('auth')->group(function () {

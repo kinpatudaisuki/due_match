@@ -8,7 +8,7 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function index() {
-        if(!auth()){
+        if(!auth()->user()){
             return redirect()->route('login');
         }
         $users = User::latest()->paginate(10);
