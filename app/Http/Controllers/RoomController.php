@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 class RoomController extends Controller
 {
     public function index($room_id) {
-        if(!auth()->user()){
+        if(!Auth::user()){
             return redirect()->route('login');
         }
 
@@ -42,7 +42,7 @@ class RoomController extends Controller
                 $query->where('user_id', $currentUser->id);
             })->whereHas('users', function ($query) use ($userIds) {
                 $query->whereIn('user_id', $userIds);
-            }, '=', count($userIds))->first(); // 全ユーザーがルームにいることを確認
+            }, '=', count($userIds))->first();
 
             if ($existingRoom) {
                 // 既存のルームが見つかった場合、そのルームIDを返す
