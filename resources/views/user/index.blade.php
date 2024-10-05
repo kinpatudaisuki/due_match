@@ -41,16 +41,15 @@
         const selectUser = document.getElementById('select_user');
         const selectUserId = selectUser.getAttribute('user_id');
 
+        // ログインしている自分のIDを取得
         const myId = {{ auth()->user()->id }};
 
-        // サーバーにルーム作成リクエストを送る
+        // サーバーにルーム作成、もしくは既存ルーム確認のリクエストを送る
         axios.post('/room/store', {
             user_ids: [myId, selectUserId]
         })
         .then(function(response) {
-            alert('ルームを作成しました');
-
-            // ルームIDに基づいてリダイレクト
+            // サーバーから返ってきたルームIDに基づいてリダイレクト
             const roomId = response.data.room_id;
             window.location.href = `/room/index/${roomId}`;
         })

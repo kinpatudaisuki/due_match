@@ -7,6 +7,8 @@ use App\Models\Room;
 use App\Models\User;
 use App\Models\Message;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RoomController extends Controller
 {
@@ -24,13 +26,33 @@ class RoomController extends Controller
         return view('room.index', compact('users', 'messages'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
 
         DB::beginTransaction();
 
         try {
-            // Roomを作成する
+            // 紐づくUserのIDを取得
+            $userIds = $request->input('user_ids');
+
+            // ログインユーザー
+            $currentUser = Auth::user();
+
+            // 全てのユーザーが既に所属しているルームが存在するか確認
+            $existingRoom = Room::whereHas('users', function ($query) use ($currentUser) {
+                $query->where('user_id', $currentUser->id);
+            })->whereHas('users', function ($query) use ($userIds) {
+                $query->whereIn('user_id', $userIds);
+            }, '=', count($userIds))->first(); // 全ユーザーがルームにいることを確認
+
+            if ($existingRoom) {
+                // 既存のルームが見つかった場合、そのルームIDを返す
+                return response()->json([
+                    'message' => 'Room already exists!',
+                    'room_id' => $existingRoom->id
+                ], 200);
+            }
+
+            // ルームが存在しない場合、新規作成
             $room = Room::create();
 
             // 紐づくUserを登録する
@@ -41,15 +63,22 @@ class RoomController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Room created successfully!', 'room_id' => $room->id], 201);
+            return response()->json([
+                'message' => 'Room created successfully!',
+                'room_id' => $room->id
+            ], 201);
+
         } catch (\Exception $e) {
             // エラー発生時はロールバック
             DB::rollBack();
             // エラーログに記録
-            \Log::error('Room creation failed: ' . $e->getMessage());
+            Log::error('Room creation failed: ' . $e->getMessage());
 
             // 500エラーとともに詳細メッセージを返す
-            return response()->json(['error' => 'Room creation failed', 'details' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Room creation failed',
+                'details' => $e->getMessage()
+            ], 500);
         }
     }
 }
