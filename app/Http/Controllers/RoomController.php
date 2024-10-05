@@ -55,9 +55,6 @@ class RoomController extends Controller
             // ルームが存在しない場合、新規作成
             $room = Room::create();
 
-            // 紐づくUserを登録する
-            $userIds = $request->input('user_ids');
-
             // 中間テーブルにデータを登録
             $room->users()->attach($userIds);
 
