@@ -47,7 +47,6 @@ class RoomController extends Controller
             if ($existingRoom) {
                 // 既存のルームが見つかった場合、そのルームIDを返す
                 return response()->json([
-                    'message' => 'Room already exists!',
                     'room_id' => $existingRoom->id
                 ], 200);
             }
@@ -61,7 +60,7 @@ class RoomController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => 'Room created successfully!',
+                'message' => 'ルームを作成しました',
                 'room_id' => $room->id
             ], 201);
 

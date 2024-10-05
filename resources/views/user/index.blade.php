@@ -19,9 +19,9 @@
                             <div class="p-6 text-gray-900">
                                 <p>{{$user->name}}</p>
                                 <p>エリア：{{$user->area}}</p>
-                                <p id="select_user" user_id={{$user->id}}></p>
+                                <p id="select_user_{{$user->id}}" user_id={{$user->id}}></p>
                             </div>
-                        <button type="submit">トークを開始する</button>
+                            <button type="submit" onclick="startChat({{$user->id}})">トークを開始する</button>
                     </form>
                 </div>
                 @endif
@@ -32,31 +32,34 @@
 </x-app-layout>
 
 <script>
-    document.getElementById('create-room-form').addEventListener('submit', function(event) {
+    function startChat(userId) {
+    // フォームのデフォルト送信を防ぐ
+    event.preventDefault();
+    
+    // 選択したユーザーのIDを取得
+    const selectUser = document.getElementById('select_user_' + userId);
+    const selectUserId = selectUser.getAttribute('user_id');
+    
+    // 自分のユーザーIDを取得
+    const myId = {{ auth()->user()->id }};
+    
+    // Axiosでサーバーにルーム作成リクエストを送信
+    axios.post('/room/store', {
+        user_ids: [myId, selectUserId]
+    })
+    .then(function(response) {
+        // レスポンスにmessageが含まれていればアラートで表示
+        if (response.data.message) {
+            alert(response.data.message);
+        }
 
-        // フォームのデフォルト動作をキャンセル
-        event.preventDefault();
-
-        // 選択したユーザーのIDを取得
-        const selectUser = document.getElementById('select_user');
-        const selectUserId = selectUser.getAttribute('user_id');
-
-        // ログインしている自分のIDを取得
-        const myId = {{ auth()->user()->id }};
-
-        // サーバーにルーム作成、もしくは既存ルーム確認のリクエストを送る
-        axios.post('/room/store', {
-            user_ids: [myId, selectUserId]
-        })
-        .then(function(response) {
-            // サーバーから返ってきたルームIDに基づいてリダイレクト
-            const roomId = response.data.room_id;
-            window.location.href = `/room/index/${roomId}`;
-        })
-        .catch(function(error) {
-            // エラーが発生した場合の処理
-            console.error(error);
-            alert('ルーム作成に失敗しました');
-        });
+        // ルームIDに基づいてリダイレクト
+        const roomId = response.data.room_id;
+        window.location.href = `/room/index/${roomId}`;
+    })
+    .catch(function(error) {
+        console.error(error);
+        alert('ルーム作成に失敗しました');
     });
+}
 </script>
