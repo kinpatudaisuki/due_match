@@ -17,7 +17,9 @@ Route::get('user/index', [UserController::class, 'index'])->name('user.index');
 
 Route::post('room/store', [RoomController::class, 'store'])->name('room.store');
 
-Route::get('room/index/{room}', [RoomController::class, 'index'])->name('room.index');
+Route::get('room/show/{room}', [RoomController::class, 'show'])->name('room.show');
+
+Route::get('room/index', [RoomController::class, 'index'])->name('room.index');
 
 Route::post('/room/{roomId}/invite', [RoomController::class, 'inviteUser']);
 

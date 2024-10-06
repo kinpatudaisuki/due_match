@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class RoomController extends Controller
 {
-    public function index($room_id) {
+    public function show($room_id) {
         if(!Auth::user()){
             return redirect()->route('login');
         }
@@ -26,7 +26,11 @@ class RoomController extends Controller
 
         // roomにあるコメント一覧
         $messages = Message::where('room_id', $room_id)->get();
-        return view('room.index', compact('all_users', 'room_users', 'messages'));
+        return view('room.show', compact('all_users', 'room_users', 'messages'));
+    }
+
+    public function index() {
+        return view('room.index');
     }
 
     public function store(Request $request) {
