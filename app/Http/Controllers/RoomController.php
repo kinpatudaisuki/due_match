@@ -65,7 +65,7 @@ class RoomController extends Controller
             $room = Room::create();
 
             // 中間テーブルにデータを登録
-            $room->users()->attach($userIds);
+            $room->users()->syncWithoutDetaching($userIds);
 
             DB::commit();
 
@@ -103,7 +103,7 @@ class RoomController extends Controller
         }
 
         // ユーザーをルームに追加
-        $room->users()->attach($userId);
+        $room->users()->syncWithoutDetaching($userId);
 
         return response()->json([
             'message' => 'ユーザーを招待しました',
