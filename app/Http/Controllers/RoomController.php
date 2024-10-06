@@ -17,13 +17,16 @@ class RoomController extends Controller
             return redirect()->route('login');
         }
 
+        // 全てのユーザー
+        $all_users = User::all();
+
         // roomにいるユーザー一覧
         $room = Room::find($room_id);
-        $users = $room->users;
+        $room_users = $room->users;
 
         // roomにあるコメント一覧
         $messages = Message::where('room_id', $room_id)->get();
-        return view('room.index', compact('users', 'messages'));
+        return view('room.index', compact('all_users', 'room_users', 'messages'));
     }
 
     public function store(Request $request) {
@@ -76,5 +79,28 @@ class RoomController extends Controller
                 'details' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function inviteUser(Request $request, $roomId) {
+        // 招待するユーザーIDをリクエストから取得
+        $userId = $request->input('user_id');
+
+        // 指定されたルームを取得
+        $room = Room::findOrFail($roomId);
+
+        // ユーザーが既にルームに存在するかチェック
+        if ($room->users()->where('user_id', $userId)->exists()) {
+            return response()->json([
+                'message' => 'そのユーザーは既にルーム内にいます'
+            ], 400);
+        }
+
+        // ユーザーをルームに追加
+        $room->users()->attach($userId);
+
+        return response()->json([
+            'message' => 'ユーザーを招待しました',
+            'room_id' => $room->id
+        ], 200);
     }
 }

@@ -19,6 +19,8 @@ Route::post('room/store', [RoomController::class, 'store'])->name('room.store');
 
 Route::get('room/index/{room}', [RoomController::class, 'index'])->name('room.index');
 
+Route::post('/room/{roomId}/invite', [RoomController::class, 'inviteUser']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
