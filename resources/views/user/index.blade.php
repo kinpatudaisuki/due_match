@@ -14,16 +14,16 @@
             @foreach ($users as $user)
             {{-- 自分のIDと異なるユーザーを表示 --}}
                 @if ( $user->id != auth()->user()->id )
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
-                    <form id="create-room-form">
-                            <div class="p-6 text-gray-900">
-                                <p>{{ $user->name }}</p>
-                                <p>エリア：{{$user->area}}</p>
-                                <p id="select_user_{{ $user->id }}" user_id={{ $user->id }}></p>
-                            </div>
-                            <button type="submit" onclick="startChat({{$user->id}})">トークを開始する</button>
-                    </form>
-                </div>
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
+                        <form id="create-room-form">
+                                <div class="p-6 text-gray-900">
+                                    <p>{{ $user->name }}</p>
+                                    <p>エリア：{{$user->area}}</p>
+                                    <p id="select_user_{{ $user->id }}" user_id={{ $user->id }}></p>
+                                </div>
+                                <button type="submit" onclick="startChat({{$user->id}})">トークを開始する</button>
+                        </form>
+                    </div>
                 @endif
             @endforeach
         @endif

@@ -30,7 +30,10 @@ class RoomController extends Controller
     }
 
     public function index() {
-        return view('room.index');
+        // ログインユーザーが所属しているルームを取得
+        $rooms = Auth::user()->rooms;
+        
+        return view('room.index', compact('rooms'));
     }
 
     public function store(Request $request) {
