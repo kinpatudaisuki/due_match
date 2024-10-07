@@ -9,11 +9,7 @@
         </p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
-
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -43,6 +39,18 @@
                             {{ __('A new verification link has been sent to your email address.') }}
                         </p>
                     @endif
+                </div>
+            @endif
+        </div>
+
+        <div>
+            <x-input-label for="image" :value="__('プロフィール画像')" />
+            <input id="image" name="image" type="file" class="mt-1 block w-full" accept="image/*" />
+            <x-input-error class="mt-2" :messages="$errors->get('image')" />
+
+            @if ($user->image)
+                <div class="mt-2">
+                    <img src="{{ asset('storage/' . $user->image) }}" alt="プロフィール画像" class="w-20 h-20 rounded-full object-cover">
                 </div>
             @endif
         </div>
