@@ -88,6 +88,21 @@ class RoomController extends Controller
         }
     }
 
+    // メッセージ送信
+    public function sendMessage(Request $request, $roomId)
+    {
+        $room = Room::findOrFail($roomId);
+
+        // メッセージを作成
+        $message = new Message();
+        $message->body = $request->input('message');
+        $message->user_id = Auth::id();
+        $message->room_id = $room->id;
+        $message->save();
+
+        return response()->json(['message' => 'メッセージが送信されました']);
+    }
+
     public function inviteUser(Request $request, $roomId) {
         // 招待するユーザーIDをリクエストから取得
         $userId = $request->input('user_id');

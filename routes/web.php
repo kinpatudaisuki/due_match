@@ -21,6 +21,10 @@ Route::get('room/show/{room}', [RoomController::class, 'show'])->name('room.show
 
 Route::get('room/index', [RoomController::class, 'index'])->name('room.index');
 
+// メッセージ送信
+Route::post('/room/{roomId}/send_message', [RoomController::class, 'sendMessage'])->name('room.sendMessage');
+
+//ユーザー招待
 Route::post('/room/{roomId}/invite', [RoomController::class, 'inviteUser']);
 
 Route::middleware('auth')->group(function () {
