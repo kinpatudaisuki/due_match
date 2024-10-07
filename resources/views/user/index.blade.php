@@ -3,7 +3,7 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
             {{ __('ユーザー一覧') }}
         </h2>
     </x-slot>
@@ -11,21 +11,36 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if ($users)
-                @foreach ($users as $user)
-                {{-- 自分のIDと異なるユーザーを表示 --}}
-                    @if ($user->id != auth()->user()->id)
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
-                            <form id="create-room-form">
-                                <div class="p-6 text-gray-900">
-                                    <p>{{ $user->name }}</p>
-                                    <p>エリア：{{$user->area}}</p>
-                                    <p id="select_user_{{ $user->id }}" user_id="{{ $user->id }}"></p>
-                                </div>
-                                <button type="submit" onclick="startChat({{ $user->id }})">トークを開始する</button>
-                            </form>
-                        </div>
-                    @endif
-                @endforeach
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+                    @foreach ($users as $user)
+                    {{-- 自分のIDと異なるユーザーを表示 --}}
+                        @if ($user->id != auth()->user()->id)
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4 p-4 w-48 flex flex-col items-center">
+                                <form id="create-room-form">
+                                    <div class="flex flex-col items-center space-y-4">
+                                        {{-- ユーザーの画像を表示 --}}
+                                        @if ($user->image)
+                                        <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @else
+                                        {{-- 画像がない場合にデフォルトの画像を表示 --}}
+                                        <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+                                            <span class="text-gray-700">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                                        </div>
+                                        @endif
+                                        <div class="text-center">
+                                            <p class="font-semibold">{{ $user->name }}</p>
+                                            <p class="text-gray-500">エリア：{{ $user->area }}</p>
+                                            <p id="select_user_{{ $user->id }}" user_id="{{ $user->id }}"></p>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="mt-2 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded" onclick="startChat({{ $user->id }})">
+                                        トークを開始する
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
             @endif
         </div>
     </div>
