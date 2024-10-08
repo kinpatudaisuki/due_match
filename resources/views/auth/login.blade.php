@@ -35,7 +35,7 @@
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                    {{ __('パスワードを忘れた方はこちら') }}
                 </a>
             @endif
 
@@ -44,4 +44,11 @@
             </x-primary-button>
         </div>
     </form>
+
+    <!-- New User Registration Link -->
+    <div class="mt-4 text-center">
+        <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('register') }}">
+            {{ __('新規登録はこちら') }}
+        </a>
+    </div>
 </x-guest-layout>
