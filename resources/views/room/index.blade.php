@@ -1,5 +1,3 @@
-<!-- Axiosを使用 -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <x-app-layout>
     <x-slot name="header">
@@ -25,7 +23,3 @@
     </div>
 </div>
 </x-app-layout>
-
-<script>
-
-</script>
