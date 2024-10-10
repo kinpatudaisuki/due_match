@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Format;
 
 class ProfileController extends Controller
 {
@@ -17,8 +18,12 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        // formatsテーブルから全てのフォーマットを取得
+        $formats = Format::all();
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'formats' => $formats,
         ]);
     }
 
@@ -50,7 +55,20 @@ class ProfileController extends Controller
             $user->image = $path;
         }
 
-        $request->user()->save();
+        // ユーザー情報を保存
+        $user->save();
+
+        // フォーマットが選択されているかチェック
+        if ($request->has('formats') && !empty($request->input('formats'))) {
+            // カンマ区切りの文字列を配列に変換
+            $formatsArray = explode(',', $request->input('formats'));
+
+            // フォーマットが選択されている場合は同期
+            $user->formats()->sync($formatsArray);
+        } else {
+            // フォーマットが未選択の場合、すべてのフォーマットを解除
+            $user->formats()->detach();
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
