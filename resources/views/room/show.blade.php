@@ -12,7 +12,15 @@
                 <h3 class="font-semibold text-lg mb-2">参加ユーザー一覧</h3>
                 <div class="flex flex-wrap">
                     @foreach ($room_users as $user)
-                        <div class="p-2 border rounded-md m-1 bg-gray-200">
+                        <div class="p-2 m-1 flex items-center">
+                            <!-- ユーザーの画像を表示 -->
+                            @if($user->image)
+                                <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full">
+                            @else
+                                <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </span>
+                            @endif
                             <p>{{ $user->name }}</p>
                         </div>
                     @endforeach
@@ -35,7 +43,15 @@
             <!-- トークルームのメッセージ表示部分 -->
             <div id="chat_window" class="bg-white overflow-auto shadow-sm sm:rounded-lg p-4" style="height: 400px; border: 1px solid #ccc;">
                 @foreach ($messages as $message)
-                    <div class="p-2 {{ $message->user_id == auth()->id() ? 'text-right' : 'text-left' }}">
+                    <div class="p-2 {{ $message->user_id == auth()->id() ? 'text-right flex justify-end' : 'text-left flex' }}">
+                        <!-- ユーザーの画像またはイニシャルを表示 -->
+                        @if($message->user->image)
+                            <img src="{{ asset('storage/' . $message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                        @else
+                            <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">
+                                {{ strtoupper(substr($message->user->name, 0, 1)) }}
+                            </span>
+                        @endif
                         <p><strong>{{ $message->user->name }}:</strong> {{ $message->body }}</p>
                     </div>
                 @endforeach
@@ -77,8 +93,8 @@
             .then(function(response) {
                 // メッセージ送信後にチャットウィンドウを更新
                 const newMessage = document.createElement('div');
-                newMessage.className = 'p-2 text-right';
-                newMessage.innerHTML = `<p><strong>{{ auth()->user()->name }}:</strong> ${message}</p>`;
+                newMessage.className = 'p-2 text-right flex justify-end';
+                newMessage.innerHTML = `<span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span><p><strong>{{ auth()->user()->name }}:</strong> ${message}</p>`;
                 chatWindow.appendChild(newMessage);
 
                 // 入力欄をクリアしてスクロールを下に移動
