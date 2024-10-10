@@ -30,14 +30,10 @@
             <!-- ユーザー招待フォーム -->
             <form id="invite_user_form" class="mb-6">
                 <h4 class="font-semibold text-lg mb-2">ユーザーを招待</h4>
-                <!-- 招待したいユーザーのIDを選択 -->
-                <select id="select_user" name="user_id" class="border-gray-300 rounded-md">
-                    @foreach ($all_users as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
+                <!-- 検索ボックス -->
+                <input type="text" id="search_user" placeholder="ユーザー名で検索" class="border-gray-300 rounded-md mb-2 w-full">
 
-                <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md">招待</button>
+                <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md mt-2">招待</button>
             </form>
 
             <!-- トークルームのメッセージ表示部分 -->
@@ -107,19 +103,36 @@
             });
         });
 
+        // ユーザー検索イベント
+        const searchInput = document.getElementById('search_user');
+        var matchedUser = null;
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            matchedUser = @json($all_users).find(user => user.name.toLowerCase().includes(searchTerm));
+
+            if (matchedUser) {
+                searchInput.classList.remove('border-red-500');
+            } else {
+                searchInput.classList.add('border-red-500');
+            }
+        });
+
         // ユーザー招待フォーム
         document.getElementById('invite_user_form').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const selectUser = document.getElementById('select_user');
-            const userId = selectUser.value;
+            if (!matchedUser) {
+                alert('有効なユーザーを選択してください');
+                return;
+            }
 
             const currentUrl = window.location.href;
             const roomId = currentUrl.split('/').pop();
 
             // サーバーに招待リクエストを送信
             axios.post(`/room/${roomId}/invite`, {
-                user_id: userId
+                user_id: matchedUser.id
             })
             .then(function(response) {
                 alert(response.data.message);
