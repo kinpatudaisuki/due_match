@@ -12,7 +12,10 @@ class UserController extends Controller
         if(!Auth::user()){
             return redirect()->route('login');
         }
-        $users = User::latest()->paginate(10);
+
+        // ユーザーを取得し、フォーマットも同時に取得する
+        $users = User::with('formats')->latest()->paginate(10);
+
         return view('user.index', compact('users'));
     }
 }
