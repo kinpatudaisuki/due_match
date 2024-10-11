@@ -9,7 +9,17 @@ class Block extends Model
 {
     use HasFactory;
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    protected $fillable = ['blocker_id', 'blocked_id'];
+
+    // ブロックしたユーザー
+    public function blocker()
+    {
+        return $this->belongsTo(User::class, 'blocker_id');
+    }
+
+    // ブロックされたユーザー
+    public function blocked()
+    {
+        return $this->belongsTo(User::class, 'blocked_id');
     }
 }

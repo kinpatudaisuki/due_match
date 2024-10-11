@@ -65,13 +65,26 @@
                             </div>
                         @endif
                     </div>
+
+                    {{-- ブロック機能の表示 --}}
+                    <div class="block-section mt-6">
+                        @if ($hasBlocked)
+                            <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="unblockUser({{ $user_data->id }})">
+                                ブロックを解除
+                            </button>
+                        @else
+                            <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="blockUser({{ $user_data->id }})">
+                                このユーザーをブロック
+                            </button>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-  </x-app-layout>
+</x-app-layout>
 
-  <script>
+<script>
     let currentRating = 0;  // 現在の評価
 
     function submitRating(userId, rating) {
@@ -119,4 +132,34 @@
         // マウスが外れたら現在の評価に応じて星の色を元に戻す
         updateStarRating(currentRating);
     }
-  </script>
+
+    // ユーザーをブロック
+    function blockUser(userId) {
+        if (confirm('このユーザーをブロックしますか？')) {
+            axios.post('/block/' + userId)
+                .then(function (response) {
+                    alert(response.data.message);
+                    location.reload();  // ページをリロードしてブロック表示を更新
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    alert('ブロックに失敗しました');
+                });
+        }
+    }
+
+    // ブロックを解除
+    function unblockUser(userId) {
+        if (confirm('このユーザーのブロックを解除しますか？')) {
+            axios.post('/unblock/' + userId)
+                .then(function (response) {
+                    alert(response.data.message);
+                    location.reload();  // ページをリロードしてブロック解除表示を更新
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    alert('ブロック解除に失敗しました');
+                });
+        }
+    }
+</script>

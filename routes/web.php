@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\BlockController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,10 @@ Route::post('/room/{room_id}/send_message', [RoomController::class, 'sendMessage
 
 //ユーザー招待
 Route::post('/room/{room_id}/invite', [RoomController::class, 'inviteUser']);
+
+//ブロックとブロック解除
+Route::post('/block/{user_id}', [BlockController::class, 'block'])->middleware('auth');
+Route::post('/unblock/{user_id}', [BlockController::class, 'unblock'])->middleware('auth');
 
 //問い合わせの作成と保存
 Route::get('contact/create', [ContactController::class, 'create'])->name('contact.create');

@@ -13,19 +13,9 @@ return new class extends Migration
     {
         Schema::create('blocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('block_user_id');
+            $table->foreignId('blocker_id')->onDelete('cascade'); // ブロックしたユーザー
+            $table->foreignId('blocked_id')->onDelete('cascade'); // ブロックされたユーザー
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-    
-            $table->foreign('block_user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
         });
     }
 
