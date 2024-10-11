@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ Route::get('/dashboard', function () {
 Route::get('user/index', [UserController::class, 'index'])->name('user.index');
 
 Route::get('user/show/{user_id}', [UserController::class, 'show'])->name('user.show');
+
+Route::post('rate', [RatingController::class, 'store'])->middleware('auth');
 
 Route::post('room/store', [RoomController::class, 'store'])->name('room.store');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -21,6 +22,15 @@ class UserController extends Controller
 
     public function show($user_id) {
         $user_data = User::with('formats')->findOrFail($user_id);
-        return view('user.show', compact('user_data'));
+
+        // 現在のログインユーザー
+        $currentUser = Auth::user();
+
+        // ログインユーザーがこのユーザーを評価済みか確認
+        $isRated = Rating::where('rater_id', $currentUser->id)
+                          ->where('rated_id', $user_id)
+                          ->exists();
+
+        return view('user.show', compact('user_data', 'isRated'));
     }
 }

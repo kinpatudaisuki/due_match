@@ -41,6 +41,8 @@
                                                 @endif
                                             </p>
 
+                                            <p class="text-gray-500">合計評価数：{{ $user->total_rate ?? 0 }}</p>
+
                                             <p id="select_user_{{ $user->id }}" user_id="{{ $user->id }}"></p>
                                         </div>
                                     </div>

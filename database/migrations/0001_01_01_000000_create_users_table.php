@@ -20,7 +20,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->string('area');
             $table->string('image')->nullable();
-            $table->integer('star')->nullable();
+            $table->integer('total_rate')->nullable();
             $table->timestamps();
         });
 
