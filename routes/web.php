@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,6 +27,10 @@ Route::post('/room/{roomId}/send_message', [RoomController::class, 'sendMessage'
 
 //ユーザー招待
 Route::post('/room/{roomId}/invite', [RoomController::class, 'inviteUser']);
+
+//問い合わせの作成と保存
+Route::get('contact/create', [ContactController::class, 'create'])->name('contact.create');
+Route::post('contact/store', [ContactController::class, 'store'])->name('contact.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

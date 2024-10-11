@@ -30,6 +30,11 @@ class RoomController extends Controller
     }
 
     public function index() {
+
+        if(!Auth::user()){
+            return redirect()->route('login');
+        }
+
         // ログインユーザーが所属しているルームを取得
         $rooms = Auth::user()->rooms;
         
