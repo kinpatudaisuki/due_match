@@ -49,6 +49,11 @@
                                             トークを開始する
                                         </button>
                                     </div>
+                                    <div class="flex justify-center mt-2">
+                                        <a href="{{ route('user.show', $user->id) }}" class="text-sm bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded">
+                                            ユーザー詳細
+                                        </a>
+                                    </div>
                                 </form>
                             </div>
                         @endif

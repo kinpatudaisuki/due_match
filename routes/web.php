@@ -16,17 +16,19 @@ Route::get('/dashboard', function () {
 
 Route::get('user/index', [UserController::class, 'index'])->name('user.index');
 
+Route::get('user/show/{user_id}', [UserController::class, 'show'])->name('user.show');
+
 Route::post('room/store', [RoomController::class, 'store'])->name('room.store');
 
-Route::get('room/show/{room}', [RoomController::class, 'show'])->name('room.show');
+Route::get('room/show/{room_id}', [RoomController::class, 'show'])->name('room.show');
 
 Route::get('room/index', [RoomController::class, 'index'])->name('room.index');
 
 // メッセージ送信
-Route::post('/room/{roomId}/send_message', [RoomController::class, 'sendMessage'])->name('room.sendMessage');
+Route::post('/room/{room_id}/send_message', [RoomController::class, 'sendMessage'])->name('room.sendMessage');
 
 //ユーザー招待
-Route::post('/room/{roomId}/invite', [RoomController::class, 'inviteUser']);
+Route::post('/room/{room_id}/invite', [RoomController::class, 'inviteUser']);
 
 //問い合わせの作成と保存
 Route::get('contact/create', [ContactController::class, 'create'])->name('contact.create');

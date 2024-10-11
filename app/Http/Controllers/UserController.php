@@ -18,4 +18,9 @@ class UserController extends Controller
 
         return view('user.index', compact('users'));
     }
+
+    public function show($user_id) {
+        $user_data = User::with('formats')->findOrFail($user_id);
+        return view('user.show', compact('user_data'));
+    }
 }
