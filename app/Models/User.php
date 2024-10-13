@@ -66,6 +66,18 @@ class User extends Authenticatable
         return $this->hasMany(Block::class, 'blocked_id');
     }
 
+    // ブロック済みかどうかをチェック
+    public function hasBlocked($userId)
+    {
+        return $this->blockedUsers()->where('blocked_id', $userId)->exists();
+    }
+
+    // 自分がブロックされたかをチェック
+    public function isBlockedBy($userId)
+    {
+        return $this->blockers()->where('blocker_id', $userId)->exists();
+    }
+
     public function formats() {
         return $this->belongsToMany(Format::class)->withTimestamps();
     }
