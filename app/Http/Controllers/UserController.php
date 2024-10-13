@@ -22,6 +22,10 @@ class UserController extends Controller
     }
 
     public function show($user_id) {
+        if(!Auth::user()){
+            return redirect()->route('login');
+        }
+
         $user_data = User::with('formats')->findOrFail($user_id);
 
         // 現在のログインユーザー
