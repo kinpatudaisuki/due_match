@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Rating;
 use App\Models\Block;
+use App\Models\Format;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -47,12 +48,8 @@ class UserController extends Controller
         // ページネーションを適用してユーザーを取得
         $users = $query->latest()->paginate(10);
 
-        // フォーマットを配列で定義
-        $formats = [
-            1 => 'オリジナル',
-            2 => 'アドバンス',
-            3 => 'その他'
-        ];
+        // フォーマットをデータベースから取得
+        $formats = Format::pluck('name', 'id'); // フォーマット名を値、IDをキーとして取得
 
         return view('user.index', compact('users', 'blockedUsers', 'blockers', 'keyword', 'formatId', 'formats'));
     }
