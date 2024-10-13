@@ -76,22 +76,30 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // フォーマットの選択結果を格納する隠しフィールドを取得
         const selectedFormatsInput = document.getElementById('selected-formats');
+
+        // 隠しフィールドに既に値が入っていれば、それを配列として扱う。なければ空の配列を用意する。
         let selectedFormats = selectedFormatsInput.value ? selectedFormatsInput.value.split(',') : [];
 
+        // 各フォーマットボタンに対して、クリックイベントのリスナーを設定
         document.querySelectorAll('.format-btn').forEach(function (btn) {
+            // 各ボタンに関連付けられたフォーマットIDを取得
             const formatId = btn.getAttribute('data-format-id');
-            
+
+            // ボタンがクリックされた時の処理
             btn.addEventListener('click', function () {
+                // もしボタンが「アクティブ」状態なら、それを解除して選択されたフォーマットから削除
                 if (btn.classList.contains('active')) {
-                    btn.classList.remove('active');
-                    selectedFormats = selectedFormats.filter(id => id !== formatId);
+                    btn.classList.remove('active');  // ボタンのアクティブ状態を解除
+                    selectedFormats = selectedFormats.filter(id => id !== formatId);  // 配列からこのフォーマットIDを削除
                 } else {
-                    btn.classList.add('active');
-                    selectedFormats.push(formatId);
+                    // そうでない場合は、アクティブ状態にしてフォーマットを追加
+                    btn.classList.add('active');  // ボタンをアクティブにする
+                    selectedFormats.push(formatId);  // 選択されたフォーマットIDを配列に追加
                 }
-                
-                // 隠しフィールドに選択されたフォーマットを更新
+
+                // 選択されたフォーマットIDをカンマで結合して、隠しフィールドの値を更新
                 selectedFormatsInput.value = selectedFormats.join(',');
             });
         });
