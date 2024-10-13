@@ -11,14 +11,28 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function index() {
-        if(!Auth::user()){
-            return redirect()->route('login');
+        // ログインユーザーの確認
+        $currentUserId = Auth::id();
+        
+        // ログインしていない場合、ログインページにリダイレクト
+        if (!$currentUserId) {
+            return redirect()->route('login')->with('error', 'ログインが必要です。');
         }
 
-        // ユーザーを取得し、フォーマットも同時に取得する
-        $users = User::with('formats')->latest()->paginate(10);
+        // ログインユーザーの情報を取得
+        $currentUser = User::findOrFail($currentUserId);
 
-        return view('user.index', compact('users'));
+        // ログインユーザーがブロックしたユーザーと、ブロックされているユーザーを取得
+        $blockedUsers = $currentUser->blockedUsers()->pluck('blocked_id')->toArray();
+        $blockers = $currentUser->blockers()->pluck('blocker_id')->toArray();
+
+        // ユーザー一覧を取得（フォーマットも一緒に取得）
+        // 自分がブロックしたユーザーは除外
+        $users = User::with('formats')
+            ->latest()
+            ->paginate(10);
+
+        return view('user.index', compact('users', 'blockedUsers', 'blockers'));
     }
 
     public function show($user_id) {

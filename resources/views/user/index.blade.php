@@ -46,11 +46,24 @@
                                             <p id="select_user_{{ $user->id }}" user_id="{{ $user->id }}"></p>
                                         </div>
                                     </div>
-                                    <div class="flex justify-center mt-2">
-                                        <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded" onclick="startChat({{ $user->id }})">
-                                            トークを開始する
-                                        </button>
-                                    </div>
+
+                                    {{-- ブロック状態に応じたメッセージまたはボタンを表示 --}}
+                                    @if (in_array($user->id, $blockers))
+                                        <div class="flex justify-center mt-2">
+                                            <p class="text-sm text-red-500">ブロックされています</p>
+                                        </div>
+                                    @elseif (in_array($user->id, $blockedUsers))
+                                        <div class="flex justify-center mt-2">
+                                            <p class="text-sm text-red-500">ブロックしています</p>
+                                        </div>
+                                    @else
+                                        <div class="flex justify-center mt-2">
+                                            <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded" onclick="startChat({{ $user->id }})">
+                                                トークを開始する
+                                            </button>
+                                        </div>
+                                    @endif
+
                                     <div class="flex justify-center mt-2">
                                         <a href="{{ route('user.show', $user->id) }}" class="text-sm bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded">
                                             ユーザー詳細
