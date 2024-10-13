@@ -40,15 +40,22 @@
             <div id="chat_window" class="bg-white overflow-auto shadow-sm sm:rounded-lg p-4" style="height: 400px; border: 1px solid #ccc;">
                 @foreach ($messages as $message)
                     <div class="p-2 {{ $message->user_id == auth()->id() ? 'text-right flex justify-end' : 'text-left flex' }}">
-                        <!-- ユーザーの画像またはイニシャルを表示 -->
-                        @if($message->user->image)
-                            <img src="{{ asset('storage/' . $message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                        @if($message->user_id)
+                            <!-- ユーザーの画像またはイニシャルを表示 -->
+                            @if($message->user && $message->user->image)
+                                <img src="{{ asset('storage/' . $message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                            @else
+                                <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">
+                                    {{ $message->user ? strtoupper(substr($message->user->name, 0, 1)) : '?' }}
+                                </span>
+                            @endif
+                            <p><strong>{{ $message->user->name ?? 'Unknown User' }}:</strong> {{ $message->body }}</p>
                         @else
-                            <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">
-                                {{ strtoupper(substr($message->user->name, 0, 1)) }}
-                            </span>
+                            <!-- user_idがないメッセージは中央揃えで表示 -->
+                            <div class="text-center w-full">
+                                <p>{{ $message->body }}</p>
+                            </div>
                         @endif
-                        <p><strong>{{ $message->user->name }}:</strong> {{ $message->body }}</p>
                     </div>
                 @endforeach
             </div>
@@ -58,6 +65,12 @@
                 <input type="text" id="message_input" name="message" class="border-gray-300 rounded-md" style="width: 900px;" placeholder="メッセージを入力" required>
                 <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md">送信</button>
             </form>
+
+            <!-- トークルームから退会するボタン -->
+            <form action="{{ route('room.leave', $room_id) }}" method="POST" class="mt-6">
+                @csrf
+                <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">トークルームから退会する</button>
+            </form>
         </div>
     </div>
 </x-app-layout>
@@ -65,7 +78,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const chatWindow = document.getElementById('chat_window');
-        
+
         // 最後のメッセージにスクロールする
         chatWindow.scrollTop = chatWindow.scrollHeight;
 

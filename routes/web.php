@@ -28,6 +28,8 @@ Route::get('room/show/{room_id}', [RoomController::class, 'show'])->name('room.s
 
 Route::get('room/index', [RoomController::class, 'index'])->name('room.index');
 
+Route::post('/room/leave/{room}', [RoomController::class, 'leave'])->name('room.leave');
+
 // メッセージ送信
 Route::post('/room/{room_id}/send_message', [RoomController::class, 'sendMessage'])->name('room.sendMessage');
 

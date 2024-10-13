@@ -38,7 +38,7 @@ class RoomController extends Controller
             ->whereNotIn('user_id', $blockedUsers)  // 自分がブロックしたユーザーを除外
             ->get();
 
-        return view('room.show', compact('all_users', 'room_users', 'messages'));
+        return view('room.show', compact('all_users', 'room_users', 'messages', 'room_id'));
     }
 
     public function index() {
@@ -106,8 +106,7 @@ class RoomController extends Controller
     }
 
     // メッセージ送信
-    public function sendMessage(Request $request, $roomId)
-    {
+    public function sendMessage(Request $request, $roomId) {
         $room = Room::findOrFail($roomId);
 
         // メッセージを作成
@@ -142,4 +141,22 @@ class RoomController extends Controller
             'room_id' => $room->id
         ], 200);
     }
+
+    public function leave($room_id) {
+        $room = Room::findOrFail($room_id);
+        $user = Auth::user();
+
+        // ユーザーをトークルームから削除
+        $room->users()->detach($user->id);
+
+        // 退出メッセージを保存
+        $message = new Message();
+        $message->room_id = $room_id;
+        $message->user_id = null; // 退出メッセージは特定のユーザーに属さない
+        $message->body = $user->name . ' が退出しました';
+        $message->save();
+
+        return redirect()->route('room.index')->with('success', 'トークルームから退会しました');
+    }
+
 }
