@@ -14,7 +14,7 @@
             <input type="text" name="keyword" placeholder="ユーザー名で検索" value="{{ request('keyword') }}" class="border rounded p-2">
 
             <!-- フォーマット選択 -->
-            <select name="format_id" class="border rounded p-2">
+            <select name="format_id" class="border rounded p-2 w-56">
                 <option value="">フォーマットで検索</option>
                 @foreach ($formats as $id => $name)
                     <option value="{{ $id }}" {{ request('format_id') == $id ? 'selected' : '' }}>
