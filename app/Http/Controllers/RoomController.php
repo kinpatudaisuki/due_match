@@ -13,19 +13,31 @@ use Illuminate\Support\Facades\Log;
 class RoomController extends Controller
 {
     public function show($room_id) {
-        if(!Auth::user()){
-            return redirect()->route('login');
+
+        $currentUserId = Auth::id();
+
+        // ログインユーザーがいない場合はリダイレクトまたはエラーメッセージを表示
+        if (!$currentUserId) {
+            return redirect()->route('login')->with('error', 'ログインが必要です。');
         }
 
-        // 全てのユーザー
+        $currentUser = User::findOrFail($currentUserId);
+
+        // 招待するために全てのユーザーデータを取得
         $all_users = User::all();
 
         // roomにいるユーザー一覧
         $room = Room::find($room_id);
         $room_users = $room->users;
 
-        // roomにあるコメント一覧
-        $messages = Message::where('room_id', $room_id)->get();
+        // 現在のログインユーザーがブロックしているユーザーIDリスト
+        $blockedUsers = $currentUser->blockedUsers()->pluck('blocked_id')->toArray();
+
+        // room内のコメント一覧を取得し、ブロックしたユーザーのメッセージを除外
+        $messages = Message::where('room_id', $room_id)
+            ->whereNotIn('user_id', $blockedUsers)  // 自分がブロックしたユーザーを除外
+            ->get();
+
         return view('room.show', compact('all_users', 'room_users', 'messages'));
     }
 
