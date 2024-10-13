@@ -8,9 +8,19 @@
         </h2>
     </x-slot>
 
+    <!-- 検索フォーム -->
+    <div class="py-4 text-center">
+        <form action="{{ route('user.index') }}" method="GET">
+            <input type="text" name="keyword" placeholder="ユーザー名で検索" value="{{ request('keyword') }}" class="border rounded p-2">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                検索
+            </button>
+        </form>
+    </div>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if ($users)
+            @if ($users->isNotEmpty())
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
                     @foreach ($users as $user)
                         {{-- 自分のIDと異なるユーザーを表示 --}}
@@ -74,6 +84,8 @@
                         @endif
                     @endforeach
                 </div>
+            @else
+                <p class="text-center text-gray-500">該当するユーザーが見つかりませんでした。</p>
             @endif
         </div>
     </div>

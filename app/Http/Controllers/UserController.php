@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         // ログインユーザーの確認
         $currentUserId = Auth::id();
-        
+
         // ログインしていない場合、ログインページにリダイレクト
         if (!$currentUserId) {
             return redirect()->route('login')->with('error', 'ログインが必要です。');
@@ -26,13 +26,20 @@ class UserController extends Controller
         $blockedUsers = $currentUser->blockedUsers()->pluck('blocked_id')->toArray();
         $blockers = $currentUser->blockers()->pluck('blocker_id')->toArray();
 
-        // ユーザー一覧を取得（フォーマットも一緒に取得）
-        // 自分がブロックしたユーザーは除外
-        $users = User::with('formats')
-            ->latest()
-            ->paginate(10);
+        // 検索キーワードを取得
+        $keyword = $request->input('keyword');
 
-        return view('user.index', compact('users', 'blockedUsers', 'blockers'));
+        // ユーザーを取得し、検索キーワードがあればフィルタリング
+        $query = User::with('formats');
+
+        if ($keyword) {
+            $query->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        // ページネーションを適用してユーザーを取得
+        $users = $query->latest()->paginate(10);
+
+        return view('user.index', compact('users', 'blockedUsers', 'blockers', 'keyword'));
     }
 
     public function show($user_id) {
