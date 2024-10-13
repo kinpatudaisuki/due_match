@@ -22,30 +22,33 @@ class UserController extends Controller
     }
 
     public function show($user_id) {
-        if(!Auth::user()){
-            return redirect()->route('login');
-        }
 
+        // 閲覧するユーザーのデータ
         $user_data = User::with('formats')->findOrFail($user_id);
 
-        // 現在のログインユーザー
-        $currentUser = Auth::user();
+        // 現在のログインユーザーのIDを取得
+        $currentUserId = Auth::id();
+
+        // ログインユーザーがいない場合はリダイレクトまたはエラーメッセージを表示
+        if (!$currentUserId) {
+            return redirect()->route('login')->with('error', 'ログインが必要です。');
+        }
+
+        // 現在のログインユーザーをUserモデルから取得
+        $currentUser = User::findOrFail($currentUserId);
 
         // ログインユーザーがこのユーザーを評価済みか確認
-        $isRated = Rating::where('rater_id', $currentUser->id)
+        $isRated = Rating::where('rater_id', $currentUserId)
                           ->where('rated_id', $user_id)
                           ->exists();
 
         // ログインユーザーがこのユーザーをブロックしているか確認
-        $hasBlocked = Block::where('blocker_id', $currentUser->id)
-                           ->where('blocked_id', $user_id)
-                           ->exists();
+        $hasBlocked = $currentUser->hasBlocked($user_id);
 
         // ログインユーザーがこのユーザーにブロックされているか確認
-        $isBlocked = Block::where('blocker_id', $user_id)
-                          ->where('blocked_id', $currentUser->id)
-                          ->exists();
+        $isBlocked = $currentUser->isBlockedBy($user_id);
 
         return view('user.show', compact('user_data', 'isRated', 'hasBlocked', 'isBlocked'));
     }
+
 }
