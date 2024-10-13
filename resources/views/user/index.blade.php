@@ -37,6 +37,13 @@
                 検索
             </button>
         </form>
+
+        <!-- リセットボタン -->
+        <form action="{{ route('user.index') }}" method="GET" class="inline-flex">
+            <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded ml-4">
+                検索をリセット
+            </button>
+        </form>
     </div>
 
     <div class="py-12">
