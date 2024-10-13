@@ -23,6 +23,16 @@
                 @endforeach
             </select>
 
+            <!-- エリア選択 -->
+            <select name="area" class="border rounded p-2 w-56">
+                <option value="">エリアで検索</option>
+                @foreach ($areas as $areaName)
+                    <option value="{{ $areaName }}" {{ request('area') == $areaName ? 'selected' : '' }}>
+                        {{ $areaName }}
+                    </option>
+                @endforeach
+            </select>
+
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
                 検索
             </button>
