@@ -12,6 +12,17 @@
     <div class="py-4 text-center">
         <form action="{{ route('user.index') }}" method="GET">
             <input type="text" name="keyword" placeholder="ユーザー名で検索" value="{{ request('keyword') }}" class="border rounded p-2">
+
+            <!-- フォーマット選択 -->
+            <select name="format_id" class="border rounded p-2">
+                <option value="">フォーマットで検索</option>
+                @foreach ($formats as $id => $name)
+                    <option value="{{ $id }}" {{ request('format_id') == $id ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
                 検索
             </button>

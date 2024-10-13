@@ -28,18 +28,33 @@ class UserController extends Controller
 
         // 検索キーワードを取得
         $keyword = $request->input('keyword');
+        // フォーマットIDを取得
+        $formatId = $request->input('format_id');
 
-        // ユーザーを取得し、検索キーワードがあればフィルタリング
+        // ユーザーを取得し、検索キーワードとフォーマットでフィルタリング
         $query = User::with('formats');
 
         if ($keyword) {
             $query->where('name', 'like', '%' . $keyword . '%');
         }
 
+        if ($formatId) {
+            $query->whereHas('formats', function ($q) use ($formatId) {
+                $q->where('formats.id', $formatId);
+            });
+        }
+
         // ページネーションを適用してユーザーを取得
         $users = $query->latest()->paginate(10);
 
-        return view('user.index', compact('users', 'blockedUsers', 'blockers', 'keyword'));
+        // フォーマットを配列で定義
+        $formats = [
+            1 => 'オリジナル',
+            2 => 'アドバンス',
+            3 => 'その他'
+        ];
+
+        return view('user.index', compact('users', 'blockedUsers', 'blockers', 'keyword', 'formatId', 'formats'));
     }
 
     public function show($user_id) {
