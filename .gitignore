@@ -3,6 +3,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/due_match_aws_key.pem
 /storage/*.key
 /vendor
 .env
