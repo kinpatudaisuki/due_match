@@ -49,7 +49,7 @@ class RoomController extends Controller
 
         // ログインユーザーが所属しているルームを取得
         $rooms = Auth::user()->rooms;
-        
+
         return view('room.index', compact('rooms'));
     }
 

@@ -36,6 +36,8 @@ Route::post('/room/{room_id}/send_message', [RoomController::class, 'sendMessage
 //ユーザー招待
 Route::post('/room/{room_id}/invite', [RoomController::class, 'inviteUser']);
 
+Route::get('/block/index', [BlockController::class, 'index'])->name('block.index');
+
 //ブロックとブロック解除
 Route::post('/block/{user_id}', [BlockController::class, 'block'])->middleware('auth');
 Route::post('/unblock/{user_id}', [BlockController::class, 'unblock'])->middleware('auth');

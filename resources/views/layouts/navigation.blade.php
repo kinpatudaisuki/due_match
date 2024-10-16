@@ -16,6 +16,11 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('block.index')" :active="request()->routeIs('block.index')">
+                        {{ __('ブロックユーザー一覧') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('contact.create')" :active="request()->routeIs('contact.create')">
                         {{ __('お問い合わせ') }}
                     </x-nav-link>
@@ -80,6 +85,11 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('room.index')" :active="request()->routeIs('room.index')">
                 {{ __('トークルーム一覧') }}
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('block.index')" :active="request()->routeIs('block.index')">
+                {{ __('ブロックユーザー一覧') }}
             </x-responsive-nav-link>
         </div>
         <div class="pt-2 pb-3 space-y-1">
