@@ -54,10 +54,11 @@ class BlockController extends Controller
         // ログインユーザーがブロックしているユーザーのデータを取得する
         $blockedUsers = $currentUser->blockedUsers()->paginate(10);
 
-        // blocked_id を使ってユーザー情報を取得
-        $blockedUserData = $blockedUsers->map(function ($block) {
-            return User::find($block->blocked_id);
-        });
+        // ブロックしたユーザーのIDをリストとして取得
+        $blockedUserIds = $blockedUsers->pluck('blocked_id');
+
+        // IDリストを使ってユーザー情報を取得
+        $blockedUserData = User::whereIn('id', $blockedUserIds)->get();
 
         return view('block.index', compact('blockedUserData'));
     }
