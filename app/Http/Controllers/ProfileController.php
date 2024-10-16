@@ -84,6 +84,10 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user->image) {
+            Storage::disk('public')->delete($user->image);
+        }
+
         Auth::logout();
 
         $user->delete();
