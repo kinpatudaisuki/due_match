@@ -35,7 +35,7 @@
         @if (Route::has('login'))
             <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
                 @auth
-                    <a href="{{ url('post/index') }}" class="ml-4 font-semibold text-white">ユーザー一覧</a>
+                    <a href="{{ url('user/index') }}" class="ml-4 font-semibold text-blue-300">ユーザー一覧</a>
                 @else
                     <a href="{{ route('login') }}" class="ml-4 font-semibold text-blue-300">ログイン</a>
 
