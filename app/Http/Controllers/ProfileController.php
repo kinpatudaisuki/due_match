@@ -55,10 +55,20 @@ class ProfileController extends Controller
                 }
             }
 
-            // 新しい画像を保存し、そのパスを設定
-            $disk = app()->environment('production') ? 's3' : 'public';
-            $path = $request->file('image')->store('images', $disk);
-            $user->image = $path;
+            try {
+
+                // 新しい画像を保存し、そのパスを設定
+                $path = $request->file('image')->store('images', 's3');
+                $user->image = $path;
+
+            } catch (\Exception $e) {
+
+                \Log::error('S3 upload error: ' . $e->getMessage());
+
+                // エラーメッセージをセッションに保存してリダイレクト
+                return Redirect::route('profile.edit')->with('error', '画像のアップロードに失敗しました。');
+
+            }
         }
 
         // ユーザー情報を保存
