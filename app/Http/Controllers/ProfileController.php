@@ -65,7 +65,8 @@ class ProfileController extends Controller
 
             // 新しい画像を保存し、そのパスを設定
             try {
-                $path = $request->file('image')->store('images', 's3');
+                $disk = app()->environment('production') ? 's3' : 'public';
+                $path = $request->file('image')->store('images', $disk);
                 \Log::debug('画像アップロード成功: ' . $path);
                 $user->image = $path;
             } catch (\Exception $e) {
