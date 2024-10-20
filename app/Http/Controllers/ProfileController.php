@@ -47,11 +47,17 @@ class ProfileController extends Controller
         if ($request->hasFile('image')) {
             // 古い画像を削除
             if ($user->image) {
-                Storage::disk('public')->delete($user->image);
+                // 本番環境ならS3から削除、そうでなければローカルのストレージから削除
+                if (app()->environment('production')) {
+                    Storage::disk('s3')->delete($user->image);
+                } else {
+                    Storage::disk('public')->delete($user->image);
+                }
             }
 
             // 新しい画像を保存し、そのパスを設定
-            $path = $request->file('image')->store('images', 'public');
+            $disk = app()->environment('production') ? 's3' : 'public';
+            $path = $request->file('image')->store('images', $disk);
             $user->image = $path;
         }
 
