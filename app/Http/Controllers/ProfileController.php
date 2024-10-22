@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Format;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -46,7 +47,7 @@ class ProfileController extends Controller
         try {
             throw new \Exception('テストエラー');
         } catch (\Exception $e) {
-            \Log::error('強制エラーログ: ' . $e->getMessage());
+            Log::error('強制エラーログ: ' . $e->getMessage());
         }
 
         // 画像がアップロードされた場合の処理
@@ -61,16 +62,16 @@ class ProfileController extends Controller
                 }
             }
 
-            \Log::debug('画像アップロード開始');  // デバッグログを追加
+            Log::debug('画像アップロード開始');  // デバッグログを追加
 
             // 新しい画像を保存し、そのパスを設定
             try {
                 $disk = app()->environment('production') ? 's3' : 'public';
                 $path = $request->file('image')->store('images', $disk);
-                \Log::debug('画像アップロード成功: ' . $path);
+                Log::debug('画像アップロード成功: ' . $path);
                 $user->image = $path;
             } catch (\Exception $e) {
-                \Log::error('S3 upload error: ' . $e->getMessage());
+                Log::error('S3 upload error: ' . $e->getMessage());
                 return Redirect::route('profile.edit')->with('error', '画像のアップロードに失敗しました。');
             }
         }
