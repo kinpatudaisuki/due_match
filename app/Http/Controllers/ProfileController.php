@@ -44,14 +44,6 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
-        try {
-            throw new \Exception('テストエラー');
-        } catch (\Exception $e) {
-            Log::error('強制エラーログ: ' . $e->getMessage());
-        }
-
-        Log::info('Laravel log test');
-
         // 画像がアップロードされた場合の処理
         if ($request->hasFile('image')) {
             // 古い画像を削除
@@ -64,7 +56,7 @@ class ProfileController extends Controller
                 }
             }
 
-            Log::debug('画像アップロード開始');  // デバッグログを追加
+            Log::debug('画像アップロード開始');
 
             // 新しい画像を保存し、そのパスを設定
             try {
