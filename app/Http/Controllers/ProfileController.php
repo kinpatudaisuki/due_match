@@ -56,8 +56,6 @@ class ProfileController extends Controller
                 }
             }
 
-            Log::debug('画像アップロード開始');
-
             // 新しい画像を保存し、そのパスを設定
             try {
                 $disk = app()->environment('production') ? 's3' : 'public';
