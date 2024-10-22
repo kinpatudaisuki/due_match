@@ -50,6 +50,8 @@ class ProfileController extends Controller
             Log::error('強制エラーログ: ' . $e->getMessage());
         }
 
+        Log::info('Laravel log test');
+
         // 画像がアップロードされた場合の処理
         if ($request->hasFile('image')) {
             // 古い画像を削除
