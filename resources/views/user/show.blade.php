@@ -15,7 +15,13 @@
                     @else
                         {{-- ユーザーの画像を表示 --}}
                         @if ($user_data->image)
-                            <img src="{{ asset('storage/' . $user_data->image) }}" alt="{{ $user_data->name }}" class="w-24 h-24 rounded-full object-cover">
+                            @if (app()->environment('production'))
+                                {{-- Production環境ではS3から画像を取得 --}}
+                                <img src="{{ Storage::disk('s3')->url($user_data->image) }}" alt="{{ $user_data->name }}" class="w-24 h-24 rounded-full object-cover">
+                            @else
+                                {{-- Production以外ではローカルストレージから画像を取得 --}}
+                                <img src="{{ asset('storage/' . $user_data->image) }}" alt="{{ $user_data->name }}" class="w-24 h-24 rounded-full object-cover">
+                            @endif
                         @else
                             {{-- 画像がない場合にデフォルトの画像を表示 --}}
                             <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center">

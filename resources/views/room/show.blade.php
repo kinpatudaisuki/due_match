@@ -14,9 +14,16 @@
                     @foreach ($room_users as $user)
                         <div class="p-2 m-1 flex items-center">
                             <!-- ユーザーの画像を表示 -->
-                            @if($user->image)
-                                <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full">
+                            @if ($user->image)
+                                @if (app()->environment('production'))
+                                    {{-- Production環境ではS3から画像を取得 --}}
+                                    <img src="{{ Storage::disk('s3')->url($user->image) }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full">
+                                @else
+                                    {{-- Production以外ではローカルストレージから画像を取得 --}}
+                                    <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full">
+                                @endif
                             @else
+                                {{-- 画像がない場合にデフォルトの画像を表示 --}}
                                 <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </span>
@@ -42,8 +49,14 @@
                     <div class="p-2 {{ $message->user_id == auth()->id() ? 'text-right flex justify-end' : 'text-left flex' }}">
                         @if($message->user_id)
                             <!-- ユーザーの画像またはイニシャルを表示 -->
-                            @if($message->user && $message->user->image)
-                                <img src="{{ asset('storage/' . $message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                            @if ($message->user && $message->user->image)
+                                @if (app()->environment('production'))
+                                    {{-- Production環境ではS3から画像を取得 --}}
+                                    <img src="{{ Storage::disk('s3')->url($message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                                @else
+                                    {{-- Production以外ではローカルストレージから画像を取得 --}}
+                                    <img src="{{ asset('storage/' . $message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                                @endif
                             @else
                                 <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">
                                     {{ $message->user ? strtoupper(substr($message->user->name, 0, 1)) : '?' }}
