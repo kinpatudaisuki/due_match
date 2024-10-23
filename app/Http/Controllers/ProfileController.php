@@ -60,7 +60,6 @@ class ProfileController extends Controller
             try {
                 $disk = app()->environment('production') ? 's3' : 'public';
                 $path = $request->file('image')->store('images', $disk);
-                Log::debug('画像アップロード成功: ' . $path);
                 $user->image = $path;
             } catch (\Exception $e) {
                 Log::error('S3 upload error: ' . $e->getMessage());

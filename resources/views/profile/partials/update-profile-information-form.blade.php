@@ -35,7 +35,13 @@
 
             @if ($user->image)
                 <div class="mt-2">
-                    <img src="{{ asset('storage/' . $user->image) }}" alt="プロフィール画像" class="w-20 h-20 rounded-full object-cover">
+                    @if (app()->environment('production'))
+                        {{-- Production環境ではS3から画像を取得 --}}
+                        <img src="{{ Storage::disk('s3')->url($user->image) }}" alt="プロフィール画像" class="w-20 h-20 rounded-full object-cover">
+                    @else
+                        {{-- Production以外ではローカルストレージから画像を取得 --}}
+                        <img src="{{ asset('storage/' . $user->image) }}" alt="プロフィール画像" class="w-20 h-20 rounded-full object-cover">
+                    @endif
                 </div>
             @endif
         </div>
