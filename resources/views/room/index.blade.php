@@ -18,9 +18,16 @@
                                 <div class="flex flex-wrap items-center space-x-6">
                                     @foreach($room->users as $user)
                                         <div class="flex items-center space-x-3">
-                                            @if($user->image)
-                                                <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                            @if ($user->image)
+                                                @if (app()->environment('production'))
+                                                    {{-- Production環境ではS3から画像を取得 --}}
+                                                    <img src="{{ Storage::disk('s3')->url($user->image) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                                @else
+                                                    {{-- Production以外ではローカルストレージから画像を取得 --}}
+                                                    <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                                @endif
                                             @else
+                                                {{-- 画像がない場合にデフォルトの画像を表示 --}}
                                                 <span class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 text-gray-700">
                                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                                 </span>

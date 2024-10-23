@@ -15,8 +15,15 @@
                                 <div class="flex flex-col items-center space-y-4">
                                     {{-- ユーザーの画像を表示 --}}
                                     @if ($user->image)
-                                        <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @if (app()->environment('production'))
+                                            {{-- Production環境ではS3から画像を取得 --}}
+                                            <img src="{{ Storage::disk('s3')->url($user->image) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @else
+                                            {{-- Production以外ではローカルストレージから画像を取得 --}}
+                                            <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @endif
                                     @else
+                                        {{-- 画像がない場合にデフォルトの画像を表示 --}}
                                         <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
                                             <span class="text-gray-700">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
                                         </div>
