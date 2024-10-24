@@ -45,7 +45,7 @@
             </div>
         @endif
 
-        <div class="font-semibold text-white text-center">
+        <div class="font-semibold text-white text-center mb-12">
             <a href="{{ route('contact.create') }}">お問い合わせ</a>
         </div>
     </div>
