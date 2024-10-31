@@ -12,35 +12,38 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['verified'])->group(function(){
 
-Route::get('user/index', [UserController::class, 'index'])->name('user.index');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('user/show/{user_id}', [UserController::class, 'show'])->name('user.show');
+    Route::get('user/index', [UserController::class, 'index'])->name('user.index');
 
-Route::post('rate', [RatingController::class, 'store'])->middleware('auth');
+    Route::get('user/show/{user_id}', [UserController::class, 'show'])->name('user.show');
 
-Route::post('room/store', [RoomController::class, 'store'])->name('room.store');
+    Route::post('rate', [RatingController::class, 'store'])->middleware('auth');
 
-Route::get('room/show/{room_id}', [RoomController::class, 'show'])->name('room.show');
+    Route::post('room/store', [RoomController::class, 'store'])->name('room.store');
 
-Route::get('room/index', [RoomController::class, 'index'])->name('room.index');
+    Route::get('room/show/{room_id}', [RoomController::class, 'show'])->name('room.show');
 
-Route::post('/room/leave/{room}', [RoomController::class, 'leave'])->name('room.leave');
+    Route::get('room/index', [RoomController::class, 'index'])->name('room.index');
 
-// メッセージ送信
-Route::post('/room/{room_id}/send_message', [RoomController::class, 'sendMessage'])->name('room.sendMessage');
+    Route::post('/room/leave/{room}', [RoomController::class, 'leave'])->name('room.leave');
 
-//ユーザー招待
-Route::post('/room/{room_id}/invite', [RoomController::class, 'inviteUser']);
+    // メッセージ送信
+    Route::post('/room/{room_id}/send_message', [RoomController::class, 'sendMessage'])->name('room.sendMessage');
 
-Route::get('/block/index', [BlockController::class, 'index'])->name('block.index');
+    //ユーザー招待
+    Route::post('/room/{room_id}/invite', [RoomController::class, 'inviteUser']);
 
-//ブロックとブロック解除
-Route::post('/block/{user_id}', [BlockController::class, 'block'])->middleware('auth');
-Route::post('/unblock/{user_id}', [BlockController::class, 'unblock'])->middleware('auth');
+    Route::get('/block/index', [BlockController::class, 'index'])->name('block.index');
+
+    //ブロックとブロック解除
+    Route::post('/block/{user_id}', [BlockController::class, 'block'])->middleware('auth');
+    Route::post('/unblock/{user_id}', [BlockController::class, 'unblock'])->middleware('auth');
+});
 
 //問い合わせの作成と保存
 Route::get('contact/create', [ContactController::class, 'create'])->name('contact.create');
