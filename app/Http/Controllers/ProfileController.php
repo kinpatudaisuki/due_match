@@ -44,6 +44,11 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
+        // エリアを更新
+        if ($request->filled('area')) {
+            $user->area = $request->input('area');
+        }
+
         // 画像がアップロードされた場合の処理
         if ($request->hasFile('image')) {
             // 古い画像を削除
