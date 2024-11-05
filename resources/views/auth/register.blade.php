@@ -75,10 +75,11 @@
         <!-- フォーマットボタン -->
         <div class="mt-4">
             <x-input-label for="formats" :value="__('フォーマットを選択 (任意)')" />
-            <div class="mt-2 flex gap-4">
+            <div class="mt-2 flex flex-wrap gap-2 sm:gap-4">
                 <button type="button" class="format-btn text-sm" data-format-id="1">オリジナル</button>
                 <button type="button" class="format-btn text-sm" data-format-id="2">アドバンス</button>
-                <button type="button" class="format-btn text-sm" data-format-id="3">その他</button>
+                <button type="button" class="format-btn text-sm" data-format-id="3">2ブロ</button>
+                <button type="button" class="format-btn text-sm" data-format-id="4">デュエパ</button>
             </div>
 
             <!-- 隠しフィールド -->
@@ -157,17 +158,28 @@
 
 <style>
     .format-btn {
-        padding: 10px 20px;
+        padding: 10px 15px;
         border: 1px solid #ccc;
         border-radius: 5px;
         background-color: #f3f4f6;
         cursor: pointer;
         transition: background-color 0.3s;
+        flex: 1 1 calc(50% - 10px); /* スマホ画面ではボタン幅を50%に調整 */
+        text-align: center;
+        box-sizing: border-box;
     }
 
     .format-btn.active {
         background-color: #4f46e5;
         color: white;
+    }
+
+    /* 大きい画面ではボタンのサイズを調整 */
+    @media (min-width: 640px) {
+        .format-btn {
+            flex: none;
+            width: auto;
+        }
     }
 
 </style>

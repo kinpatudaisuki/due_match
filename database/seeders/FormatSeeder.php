@@ -13,7 +13,7 @@ class FormatSeeder extends Seeder
      */
     public function run()
     {
-        $formats = ['オリジナル', 'アドバンス', 'その他'];
+        $formats = ['オリジナル', 'アドバンス', '2ブロ', 'デュエパ'];
 
         foreach ($formats as $format) {
             Format::create(['name' => $format]);
