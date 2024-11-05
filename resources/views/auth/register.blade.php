@@ -76,9 +76,9 @@
         <div class="mt-4">
             <x-input-label for="formats" :value="__('フォーマットを選択 (任意)')" />
             <div class="mt-2 flex gap-4">
-                <button type="button" class="format-btn" data-format-id="1">オリジナル</button>
-                <button type="button" class="format-btn" data-format-id="2">アドバンス</button>
-                <button type="button" class="format-btn" data-format-id="3">その他</button>
+                <button type="button" class="format-btn text-sm" data-format-id="1">オリジナル</button>
+                <button type="button" class="format-btn text-sm" data-format-id="2">アドバンス</button>
+                <button type="button" class="format-btn text-sm" data-format-id="3">その他</button>
             </div>
 
             <!-- 隠しフィールド -->
