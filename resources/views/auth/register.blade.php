@@ -170,7 +170,4 @@
         color: white;
     }
 
-    .format-btn:hover {
-        background-color: #e5e7eb; /* ホバー時の色 */
-    }
 </style>

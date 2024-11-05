@@ -122,8 +122,4 @@
         color: white;
     }
 
-    /* ホバー時の色 */
-    .format-btn:hover {
-        background-color: #e5e7eb;
-    }
 </style>

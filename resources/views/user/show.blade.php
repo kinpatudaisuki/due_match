@@ -89,6 +89,13 @@
                             @endif
                         </div>
                     @endif
+
+                    <div class="mx-auto">
+                        <a href="{{ route('user.index') }}" class="block w-48 mx-auto text-center bg-blue-500 text-white py-2 rounded-md">
+                            ユーザー一覧に戻る
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
