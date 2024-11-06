@@ -9,6 +9,9 @@ use App\Models\Message;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MessageNotification;
+use App\Jobs\SendNotificationEmail;
 
 class RoomController extends Controller
 {
@@ -108,13 +111,23 @@ class RoomController extends Controller
     // メッセージ送信
     public function sendMessage(Request $request, $roomId) {
         $room = Room::findOrFail($roomId);
+        $currentUserId = Auth::id();
+        $messageBody = $request->input('message');
 
         // メッセージを作成
         $message = new Message();
-        $message->body = $request->input('message');
-        $message->user_id = Auth::id();
+        $message->body = $messageBody;
+        $message->user_id = $currentUserId;
         $message->room_id = $room->id;
         $message->save();
+
+        // 他のメンバーに通知を送信（非同期処理）
+        $roomUsers = $room->users()->where('user_id', '!=', $currentUserId)->get();
+        $senderName = Auth::user()->name;
+    
+        foreach ($roomUsers as $user) {
+            SendNotificationEmail::dispatch($user->email, $messageBody, $senderName);
+        }
 
         return response()->json(['message' => 'メッセージが送信されました']);
     }
