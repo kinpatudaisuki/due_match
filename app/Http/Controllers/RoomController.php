@@ -121,8 +121,18 @@ class RoomController extends Controller
         $message->room_id = $room->id;
         $message->save();
 
+        // ログインユーザーがブロックしている、またはブロックされているユーザーを取得
+        $currentUser = User::findOrFail($currentUserId);
+        $blockedUsers = $currentUser->blockedUsers()->pluck('blocked_id')->toArray();
+        $blockedByUsers = $currentUser->blockers()->pluck('blocker_id')->toArray();
+        $excludedUsers = array_merge($blockedUsers, $blockedByUsers);
+
         // 他のメンバーに通知を送信（非同期処理）
-        $roomUsers = $room->users()->where('user_id', '!=', $currentUserId)->get();
+        $roomUsers = $room->users()
+            ->where('user_id', '!=', $currentUserId)
+            ->whereNotIn('user_id', $excludedUsers) // ブロック関係のユーザーを除外
+            ->get();
+
         $senderName = Auth::user()->name;
     
         foreach ($roomUsers as $user) {
