@@ -87,7 +87,7 @@
 
                                             <p class="text-gray-500">合計評価数：{{ $user->total_rate ?? 0 }}</p>
 
-                                            <p id="select_user_{{ $user->id }}" user_id="{{ $user->id }}"></p>
+                                            <p id="select_user_{{ $user->id }}" user_id="{{ $user->id }}" user_name="{{ $user->name }}"></p>
                                         </div>
                                     </div>
 
@@ -130,12 +130,13 @@
         // フォームのデフォルト送信を防ぐ
         event.preventDefault();
 
-        // 確認ポップアップを表示し、OKが押された場合のみ処理を続行
-        if (confirm("トークを開始しますか？")) {
-            // 選択したユーザーのIDを取得
-            const selectUser = document.getElementById('select_user_' + userId);
-            const selectUserId = selectUser.getAttribute('user_id');
+        // 選択したユーザーのIDと名前を取得
+        const selectUser = document.getElementById('select_user_' + userId);
+        const selectUserId = selectUser.getAttribute('user_id');
+        const selectUserName = selectUser.getAttribute('user_name'); // ユーザー名を取得
 
+        // 確認ポップアップを表示し、OKが押された場合のみ処理を続行
+        if (confirm(`${selectUserName}とトークを開始しますか？`)) {
             // 自分のユーザーIDを取得
             const myId = {{ auth()->user()->id }};
 
