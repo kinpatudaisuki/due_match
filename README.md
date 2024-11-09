@@ -10,8 +10,8 @@ Web server：Apache 2.4.58 (Unix)<br>
 DB：Mysql 8.0.35
 
 #### ・本番環境
-AWS EC2
-OS：AmazonLinux2023
+AWS EC2<br>
+OS：AmazonLinux2023<br>
 Laravel：11.26.0<br>
 PHP：8.3.10<br>
 Web server：Apache 2.4.62 (Amazon Linux)<br>
