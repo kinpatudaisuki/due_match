@@ -2,10 +2,19 @@
 カードゲームの１つであるデュエル・マスターズのプレイヤーが、交流することのできるマッチングサイトです。
 
 ### ・環境
+#### ・開発環境
 MAMP：7.0<br>
 Laravel：11.26.0<br>
 PHP：8.3.9<br>
 Web server：Apache 2.4.58 (Unix)<br>
+DB：Mysql 8.0.35
+
+#### ・本番環境
+AWS EC2
+OS：AmazonLinux2023
+Laravel：11.26.0<br>
+PHP：8.3.10<br>
+Web server：Apache 2.4.62 (Amazon Linux)<br>
 DB：MariaDB 10.5.25
 
 ### ・機能
