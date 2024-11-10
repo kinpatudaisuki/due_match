@@ -86,7 +86,7 @@
                                                 <div class="grid grid-cols-2 gap-1 mt-1">
                                                     @if ($user->formats->isNotEmpty())
                                                         @foreach ($user->formats as $format)
-                                                            <span class="bg-blue-500 text-white px-2 py-0.5 rounded-md text-sm">
+                                                            <span class="bg-blue-500 text-white px-2 py-0.5 rounded-md text-xs">
                                                                 {{ $format->name }}
                                                             </span>
                                                         @endforeach
