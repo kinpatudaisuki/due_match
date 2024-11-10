@@ -80,9 +80,9 @@
             </form>
 
             <!-- トークルームから退会するボタン -->
-            <form action="{{ route('room.leave', $room_id) }}" method="POST" class="mt-6">
+            <form id="leave_room_form" action="{{ route('room.leave', $room_id) }}" method="POST" class="mt-6">
                 @csrf
-                <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">トークルームから退会する</button>
+                <button type="button" onclick="confirmLeaveRoom()" class="px-4 py-2 bg-red-500 text-white rounded-md">トークルームから退会する</button>
             </form>
         </div>
     </div>
@@ -173,5 +173,12 @@
                 }
             });
         });
+
+        // 退会ボタン
+        window.confirmLeaveRoom = function() {
+            if (confirm('本当にトークルームから退会しますか？')) {
+                document.getElementById('leave_room_form').submit();
+            }
+        }
     });
 </script>
