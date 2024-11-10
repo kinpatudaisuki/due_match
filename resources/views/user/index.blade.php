@@ -53,7 +53,7 @@
                     @foreach ($users as $user)
                         {{-- 自分のIDと異なるユーザーを表示 --}}
                         @if ($user->id != auth()->user()->id)
-                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4 p-4 w-48 flex flex-col items-center">
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4 p-4 w-64 flex flex-col items-center">
                                 <form id="create-room-form">
                                     <div class="flex flex-col items-center space-y-4">
                                         {{-- ユーザーの画像を表示 --}}
@@ -73,17 +73,28 @@
                                         @endif
                                         <div class="text-center">
                                             <p class="font-semibold">{{ $user->name }}</p>
-                                            <p class="text-gray-500">エリア：{{ $user->area }}</p>
+                                            <p class="text-gray-500">
+                                                エリア：
+                                                <span class="bg-green-500 text-white px-2 py-0.5 rounded-md">
+                                                    {{ $user->area }}
+                                                </span>
+                                            </p>
 
                                             {{-- フォーマットを表示 --}}
-                                            <p class="text-gray-500">
+                                            <div class="text-gray-500">
                                                 フォーマット：
-                                                @if ($user->formats->isNotEmpty())
-                                                    {{ implode(', ', $user->formats->pluck('name')->toArray()) }}
-                                                @else
-                                                    なし
-                                                @endif
-                                            </p>
+                                                <div class="grid grid-cols-2 gap-1 mt-1">
+                                                    @if ($user->formats->isNotEmpty())
+                                                        @foreach ($user->formats as $format)
+                                                            <span class="bg-blue-500 text-white px-2 py-0.5 rounded-md text-sm">
+                                                                {{ $format->name }}
+                                                            </span>
+                                                        @endforeach
+                                                    @else
+                                                        <span>なし</span>
+                                                    @endif
+                                                </div>
+                                            </div>
 
                                             <p class="text-gray-500">合計評価数：{{ $user->total_rate ?? 0 }}</p>
 

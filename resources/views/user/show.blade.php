@@ -34,17 +34,28 @@
                             <h3 class="text-2xl font-bold">{{ $user_data->name }}</h3>
 
                             {{-- ユーザーのエリア --}}
-                            <p class="text-gray-500">エリア：{{ $user_data->area }}</p>
+                            <p class="text-gray-500">
+                                エリア：
+                                <span class="bg-green-500 text-white px-3 py-1 rounded-md">
+                                    {{ $user_data->area }}
+                                </span>
+                            </p>
 
                             {{-- フォーマットの表示 --}}
-                            <p class="text-gray-500">
+                            <div class="text-gray-500">
                                 フォーマット：
-                                @if ($user_data->formats->isNotEmpty())
-                                    {{ implode(', ', $user_data->formats->pluck('name')->toArray()) }}
-                                @else
-                                    なし
-                                @endif
-                            </p>
+                                <div class="grid grid-cols-2 gap-1 mt-1">
+                                    @if ($user_data->formats->isNotEmpty())
+                                        @foreach ($user_data->formats as $format)
+                                            <span class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm">
+                                                {{ $format->name }}
+                                            </span>
+                                        @endforeach
+                                    @else
+                                        <span>なし</span>
+                                    @endif
+                                </div>
+                            </div>
 
                             <p class="text-gray-500">合計評価数：{{ $user_data->total_rate ?? 0 }}</p>
                         </div>
