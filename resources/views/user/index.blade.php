@@ -53,7 +53,7 @@
                     @foreach ($users as $user)
                         {{-- 自分のIDと異なるユーザーを表示 --}}
                         @if ($user->id != auth()->user()->id)
-                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4 p-4 w-64 flex flex-col items-center">
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4 p-4 w-48 flex flex-col items-center">
                                 <form id="create-room-form">
                                     <div class="flex flex-col items-center space-y-4">
                                         {{-- ユーザーの画像を表示 --}}
