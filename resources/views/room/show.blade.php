@@ -62,7 +62,17 @@
                                     {{ $message->user ? strtoupper(substr($message->user->name, 0, 1)) : '?' }}
                                 </span>
                             @endif
-                            <p><strong>{{ $message->user->name ?? 'Unknown User' }}:</strong> {{ $message->body }}</p>
+
+                            <!-- メッセージと画像表示 -->
+                            <div>
+                                <p><strong>{{ $message->user->name ?? 'Unknown User' }}:</strong> {{ $message->body }}</p>
+                                @if ($message->image)
+                                    <img src="{{ app()->environment('production') ? Storage::disk('s3')->url($message->image) : asset('storage/' . $message->image) }}" 
+                                        alt="Attached image" 
+                                        class="mt-2 rounded-md max-w-[100px] h-auto md:max-w-[150px]">
+                                @endif
+
+                            </div>
                         @else
                             <!-- user_idがないメッセージは中央揃えで表示 -->
                             <div class="text-center w-full">
@@ -74,9 +84,23 @@
             </div>
 
             <!-- メッセージ送信フォーム -->
-            <form id="message_form" class="mt-4 flex items-center">
-                <input type="text" id="message_input" name="message" class="border-gray-300 rounded-md" style="width: 900px;" placeholder="メッセージを入力" required>
-                <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md">送信</button>
+            <form id="message_form" class="mt-4 flex flex-wrap items-center space-y-2 md:space-y-0" enctype="multipart/form-data">
+
+                <input 
+                    type="text" 
+                    id="message_input" 
+                    name="body" 
+                    class="border-gray-300 rounded-md p-2 text-sm w-full md:w-auto md:flex-1" 
+                    placeholder="メッセージを入力">
+
+                <!-- ファイル選択ボタン -->
+                <label for="image_input" class="ml-2 px-3 py-1 bg-green-500 text-white text-sm rounded-md cursor-pointer">
+                    ファイルを選択
+                </label>
+                <input type="file" id="image_input" name="image" class="hidden">
+
+                <!-- 送信ボタン -->
+                <button type="submit" class="ml-2 px-3 py-1 bg-blue-500 text-white text-sm rounded-md">送信</button>
             </form>
 
             <!-- トークルームから退会するボタン -->
@@ -100,27 +124,46 @@
             event.preventDefault();
 
             const messageInput = document.getElementById('message_input');
+            const imageInput = document.getElementById('image_input');
             const message = messageInput.value;
 
-            if (message.trim() === '') return;
+            if (message.trim() === '' && imageInput.files.length === 0) return;
+
+            const formData = new FormData();
+            formData.append('body', message);
+            if (imageInput.files.length > 0) {
+                formData.append('image', imageInput.files[0]);
+            }
 
             // 現在のURLからルームIDを取得
             const currentUrl = window.location.href;
             const roomId = currentUrl.split('/').pop();
 
             // サーバーにメッセージを送信
-            axios.post(`/room/${roomId}/send_message`, {
-                message: message
+            axios.post(`/room/${roomId}/send_message`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             })
             .then(function(response) {
                 // メッセージ送信後にチャットウィンドウを更新
                 const newMessage = document.createElement('div');
                 newMessage.className = 'p-2 text-right flex justify-end';
-                newMessage.innerHTML = `<span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span><p><strong>{{ auth()->user()->name }}:</strong> ${message}</p>`;
+
+                let messageContent = `<span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span><p><strong>{{ auth()->user()->name }}:</strong> ${message}</p>`;
+                
+                // 画像がある場合は表示
+                if (imageInput.files.length > 0) {
+                    const imageUrl = URL.createObjectURL(imageInput.files[0]);
+                    messageContent += `<img src="${imageUrl}" alt="Attached image" class="mt-2 rounded-md w-32 h-32">`;
+                }
+                
+                newMessage.innerHTML = messageContent;
                 chatWindow.appendChild(newMessage);
 
                 // 入力欄をクリアしてスクロールを下に移動
                 messageInput.value = '';
+                imageInput.value = '';
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             })
             .catch(function(error) {

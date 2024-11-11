@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageNotification;
 use App\Jobs\SendNotificationEmail;
+use Illuminate\Support\Facades\Storage;
 
 class RoomController extends Controller
 {
@@ -110,15 +111,43 @@ class RoomController extends Controller
 
     // メッセージ送信
     public function sendMessage(Request $request, $roomId) {
+        $request->validate([
+            'body' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif'
+        ]);
+
+        // メッセージと画像が両方nullの場合はエラー
+        if (!$request->filled('body') && !$request->hasFile('image')) {
+            return response()->json(['error' => 'メッセージまたは画像が必要です'], 422);
+        }
+
         $room = Room::findOrFail($roomId);
         $currentUserId = Auth::id();
-        $messageBody = $request->input('message');
+        $messageBody = $request->input('body');
+        if(empty($messageBody)){
+            $messageBody = "新しい画像を投稿しました。";
+        }
+        $imagePath = null;
+
+        // 画像がアップロードされた場合の処理
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            if (app()->environment('production')) {
+                // S3にアップロード
+                $imagePath = $image->store('messages', 's3');
+            } else {
+                // ローカルストレージにアップロード
+                $imagePath = $image->store('messages', 'public');
+            }
+        }
 
         // メッセージを作成
         $message = new Message();
         $message->body = $messageBody;
         $message->user_id = $currentUserId;
         $message->room_id = $room->id;
+        $message->image = $imagePath;
         $message->save();
 
         // ログインユーザーがブロックしている、またはブロックされているユーザーを取得
@@ -134,7 +163,7 @@ class RoomController extends Controller
             ->get();
 
         $senderName = Auth::user()->name;
-    
+
         foreach ($roomUsers as $user) {
             SendNotificationEmail::dispatch($user->email, $messageBody, $senderName);
         }
