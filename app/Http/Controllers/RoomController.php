@@ -113,7 +113,7 @@ class RoomController extends Controller
     public function sendMessage(Request $request, $roomId) {
         $request->validate([
             'body' => 'nullable|string|max:1000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,JPEG'
         ]);
 
         // メッセージと画像が両方nullの場合はエラー
