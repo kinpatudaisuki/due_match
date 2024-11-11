@@ -48,24 +48,35 @@
                 @foreach ($messages as $message)
                     <div class="p-2 {{ $message->user_id == auth()->id() ? 'text-right flex justify-end' : 'text-left flex' }}">
                         @if($message->user_id)
-                            <!-- ユーザーの画像またはイニシャルを表示 -->
-                            @if ($message->user && $message->user->image)
-                                @if (app()->environment('production'))
-                                    {{-- Production環境ではS3から画像を取得 --}}
-                                    <img src="{{ Storage::disk('s3')->url($message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                            <!-- 自分以外のユーザーの画像またはイニシャルを表示 -->
+                            @if ($message->user && $message->user->id !== auth()->id())
+                                @if ($message->user->image)
+                                    @if (app()->environment('production'))
+                                        {{-- Production環境ではS3から画像を取得 --}}
+                                        <img src="{{ Storage::disk('s3')->url($message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                                    @else
+                                        {{-- Production以外ではローカルストレージから画像を取得 --}}
+                                        <img src="{{ asset('storage/' . $message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                                    @endif
                                 @else
-                                    {{-- Production以外ではローカルストレージから画像を取得 --}}
-                                    <img src="{{ asset('storage/' . $message->user->image) }}" alt="{{ $message->user->name }}" class="w-10 h-10 rounded-full mr-2">
+                                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">
+                                        {{ strtoupper(substr($message->user->name, 0, 1)) }}
+                                    </span>
                                 @endif
-                            @else
-                                <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">
-                                    {{ $message->user ? strtoupper(substr($message->user->name, 0, 1)) : '?' }}
-                                </span>
                             @endif
 
                             <!-- メッセージと画像表示 -->
                             <div>
-                                <p><strong>{{ $message->user->name ?? 'Unknown User' }}:</strong> {{ $message->body }}</p>
+                                @if ($message->user && $message->user->id !== auth()->id())
+                                    <p><strong>{{ $message->user->name }}:</strong></p>
+                                @endif
+
+                                <!-- メッセージ本文 -->
+                                <p class="inline-block bg-green-200 text-black px-4 py-2 rounded-lg max-w-xs break-words">
+                                    {{ $message->body }}
+                                </p>
+
+                                <!-- 画像が添付されている場合 -->
                                 @if ($message->image)
                                     <img src="{{ app()->environment('production') ? Storage::disk('s3')->url($message->image) : asset('storage/' . $message->image) }}" 
                                         alt="Attached image" 
@@ -148,17 +159,25 @@
             .then(function(response) {
                 // メッセージ送信後にチャットウィンドウを更新
                 const newMessage = document.createElement('div');
-                newMessage.className = 'p-2 text-right flex justify-end';
+                newMessage.className = 'p-2 flex flex-col items-end text-right';
 
-                let messageContent = `<span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-2">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span><p><strong>{{ auth()->user()->name }}:</strong> ${message}</p>`;
+                // メッセージの内容
+                let messageContent = `
+                    <p class="inline-block bg-green-200 text-black px-4 py-2 rounded-lg max-w-xs break-words mb-2 text-right">
+                        ${message}
+                    </p>
+                `;
                 
                 // 画像がある場合は表示
                 if (imageInput.files.length > 0) {
                     const imageUrl = URL.createObjectURL(imageInput.files[0]);
-                    messageContent += `<img src="${imageUrl}" alt="Attached image" class="mt-2 rounded-md w-32 h-32">`;
+                    messageContent += `
+                        <img src="${imageUrl}" alt="Attached image" class="mt-2 rounded-md max-w-[100px] h-auto md:max-w-[150px] self-end">
+                    `;
                 }
                 
                 newMessage.innerHTML = messageContent;
+                const chatWindow = document.getElementById('chat_window');
                 chatWindow.appendChild(newMessage);
 
                 // 入力欄をクリアしてスクロールを下に移動
