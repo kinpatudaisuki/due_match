@@ -80,8 +80,14 @@
                                 @if ($message->image)
                                     <img src="{{ app()->environment('production') ? Storage::disk('s3')->url($message->image) : asset('storage/' . $message->image) }}" 
                                         alt="Attached image" 
-                                        class="mt-2 rounded-md max-w-[100px] h-auto md:max-w-[150px]">
+                                        class="mt-2 rounded-md max-w-[100px] h-auto md:max-w-[150px] cursor-pointer" 
+                                        onclick="showImageModal(this.src)">
                                 @endif
+
+                                <!-- モーダル用のHTML -->
+                                <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden" onclick="hideImageModal()">
+                                    <img id="modalImage" class="max-w-full max-h-full rounded-md" alt="拡大画像">
+                                </div>
 
                             </div>
                         @else
@@ -172,7 +178,7 @@
                 if (imageInput.files.length > 0) {
                     const imageUrl = URL.createObjectURL(imageInput.files[0]);
                     messageContent += `
-                        <img src="${imageUrl}" alt="Attached image" class="mt-2 rounded-md max-w-[100px] h-auto md:max-w-[150px] self-end">
+                        <img src="${imageUrl}" alt="Attached image" class="mt-2 rounded-md max-w-[100px] h-auto md:max-w-[150px] self-end cursor-pointer" onclick="showImageModal('${imageUrl}')">
                     `;
                 }
                 
@@ -190,6 +196,23 @@
                 alert('メッセージの送信に失敗しました');
             });
         });
+
+        // 画像をモーダルで表示する関数
+        function showImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = src;
+            modal.classList.remove('hidden');
+        }
+
+        // モーダルを非表示にする関数
+        function hideImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+        }
+
+        window.showImageModal = showImageModal;
+        window.hideImageModal = hideImageModal;
 
         // ユーザー検索イベント
         const searchInput = document.getElementById('search_user');
