@@ -121,9 +121,9 @@
             </form>
 
             <!-- トークルームから退会するボタン -->
-            <form id="leave_room_form" action="{{ route('room.leave', $room_id) }}" method="POST" class="mt-6">
+            <form id="leave_room_form" action="{{ route('room.leave', $room_id) }}" method="POST" class="mt-10">
                 @csrf
-                <button type="button" onclick="confirmLeaveRoom()" class="px-4 py-2 bg-red-500 text-white rounded-md">トークルームから退会する</button>
+                <button type="button" onclick="confirmLeaveRoom()" class="px-3 py-1 bg-red-500 text-white text-sm rounded-md">トークルームから退会する</button>
             </form>
         </div>
     </div>
