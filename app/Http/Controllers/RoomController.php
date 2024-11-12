@@ -123,10 +123,7 @@ class RoomController extends Controller
 
         $room = Room::findOrFail($roomId);
         $currentUserId = Auth::id();
-        $messageBody = $request->input('body');
-        if(empty($messageBody)){
-            $messageBody = "新しい画像を投稿しました。";
-        }
+        $messageBody = $request->input('body') ?? '';
         $imagePath = null;
 
         // 画像がアップロードされた場合の処理

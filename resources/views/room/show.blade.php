@@ -72,9 +72,11 @@
                                 @endif
 
                                 <!-- メッセージ本文 -->
-                                <p class="inline-block bg-green-200 text-black px-4 py-2 rounded-lg max-w-xs break-words">
-                                    {{ $message->body }}
-                                </p>
+                                @if($message->body)
+                                    <p class="inline-block bg-green-200 text-black px-4 py-2 rounded-lg max-w-xs break-words">
+                                        {{ $message->body }}
+                                    </p>
+                                @endif
 
                                 <!-- 画像が添付されている場合 -->
                                 @if ($message->image)
@@ -168,12 +170,16 @@
                 newMessage.className = 'p-2 flex flex-col items-end text-right';
 
                 // メッセージの内容
-                let messageContent = `
-                    <p class="inline-block bg-green-200 text-black px-4 py-2 rounded-lg max-w-xs break-words mb-2 text-right">
-                        ${message}
-                    </p>
-                `;
-                
+                let messageContent = '';  // 初期化
+
+                if (message) {
+                    messageContent = `
+                        <p class="inline-block bg-green-200 text-black px-4 py-2 rounded-lg max-w-xs break-words mb-2 text-right">
+                            ${message}
+                        </p>
+                    `;
+                }
+
                 // 画像がある場合は表示
                 if (imageInput.files.length > 0) {
                     const imageUrl = URL.createObjectURL(imageInput.files[0]);
@@ -211,6 +217,7 @@
             modal.classList.add('hidden');
         }
 
+        // モーダルが表示されないバグ回避のため、windowオブジェクトに設定
         window.showImageModal = showImageModal;
         window.hideImageModal = hideImageModal;
 

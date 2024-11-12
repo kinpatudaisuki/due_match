@@ -8,7 +8,11 @@
 <body>
     <p>デュエマッチよりお知らせです。</p>
     <p>{{ $senderName }}さんから新しいメッセージがあります:</p>
-    <p>{{ $messageBody }}</p>
+    @if(empty($messageBody))
+        <p>新しい画像を投稿しました。</p>
+    @else
+        <p>{{ $messageBody }}</p>
+    @endif
     <p><a href="https://due-match.com">こちらをクリックしてデュエマッチに遷移できます。</a></p>
 </body>
 </html>
