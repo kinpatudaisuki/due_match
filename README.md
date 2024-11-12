@@ -31,10 +31,12 @@ DB：MariaDB 10.5.25
 
 ### ・実際の画面
 ユーザー一覧と検索
-<img width="1231" alt="Monosnap Due_match 2024-11-09 12-04-47" src="https://github.com/user-attachments/assets/f83ea200-265e-4c77-9bf6-810f0f0f434d">
+<img width="1075" alt="Monosnap Due_match 2024-11-12 18-56-53" src="https://github.com/user-attachments/assets/cddc8687-4942-4e47-b28c-16897cf1ede7">
+
+
 
 トーク画面
-<img width="1200" alt="Monosnap Due_match 2024-11-09 12-09-23" src="https://github.com/user-attachments/assets/fc4fd597-7db7-4136-956a-eb9eddc4a8d5">
+<img width="1063" alt="Monosnap Due_match 2024-11-12 18-59-43" src="https://github.com/user-attachments/assets/39316cc4-01f3-40ae-8226-520efb660e48">
 
 
 
