@@ -8,7 +8,7 @@
 <body>
     <p>デュエマッチよりお知らせです。</p>
     <p>{{ $senderName }}さんから新しいメッセージがあります:</p>
-    @if(empty($messageBody))
+    @if(!$messageBody)
         <p>新しい画像を投稿しました。</p>
     @else
         <p>{{ $messageBody }}</p>
