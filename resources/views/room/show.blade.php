@@ -116,7 +116,8 @@
                 <label for="image_input" class="ml-2 px-3 py-1 bg-green-500 text-white text-sm rounded-md cursor-pointer">
                     ファイルを選択
                 </label>
-                <input type="file" id="image_input" name="image" class="hidden">
+                <input type="file" id="image_input" name="image" class="hidden" accept="image/*">
+                <img id="image_preview" src="" alt="プレビュー画像" class="mt-2 w-20 h-20 rounded object-cover hidden">
 
                 <!-- 送信ボタン -->
                 <button type="submit" class="ml-2 px-3 py-1 bg-blue-500 text-white text-sm rounded-md">送信</button>
@@ -144,6 +145,7 @@
 
             const messageInput = document.getElementById('message_input');
             const imageInput = document.getElementById('image_input');
+            const preview = document.getElementById('image_preview');
             const message = messageInput.value;
 
             if (message.trim() === '' && imageInput.files.length === 0) return;
@@ -195,12 +197,35 @@
                 // 入力欄をクリアしてスクロールを下に移動
                 messageInput.value = '';
                 imageInput.value = '';
+
+                if (preview) {
+                    preview.src = ''; // プレビュー画像のURLをクリア
+                    preview.classList.add('hidden'); // プレビュー画像を非表示に
+                }
+
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             })
             .catch(function(error) {
                 console.error(error);
                 alert('メッセージの送信に失敗しました');
             });
+        });
+
+        document.getElementById("image_input").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("image_preview");
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove("hidden"); // プレビュー画像を表示
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+                preview.classList.add("hidden"); // プレビュー画像を非表示
+            }
         });
 
         // 画像をモーダルで表示する関数
