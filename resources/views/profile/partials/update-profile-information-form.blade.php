@@ -77,6 +77,15 @@
             <x-input-error class="mt-2" :messages="$errors->get('formats')" />
         </div>
 
+        <!-- 自己紹介 -->
+        <div>
+            <x-input-label for="introduction" :value="__('自己紹介')" />
+            <textarea id="introduction" name="introduction" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" rows="4" autocomplete="introduction" placeholder="実績、休みの日、よく行くショップ、所持デッキなど300文字まで" maxlength="300">{{ old('introduction', $user->introduction) }}</textarea>
+            <div id="charCount" class="text-sm text-gray-500 mt-1">残り <span id="remainingChars">300</span> 文字</div>
+            <div id="warningMessage" class="text-sm text-red-500 mt-1 hidden">文字数が300を超えています。</div>
+            <x-input-error class="mt-2" :messages="$errors->get('introduction')" />
+        </div>
+
         <!-- 保存ボタン -->
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
@@ -119,6 +128,25 @@
                 // 隠しフィールドに選択されたフォーマットを更新
                 selectedFormatsInput.value = selectedFormats.join(',');
             });
+        });
+
+        const textarea = document.getElementById('introduction');
+        const remainingChars = document.getElementById('remainingChars');
+        const warningMessage = document.getElementById('warningMessage');
+
+        textarea.addEventListener('input', function() {
+            const currentLength = textarea.value.length;
+            const maxLength = 300;
+
+            // 残り文字数の更新
+            remainingChars.textContent = maxLength - currentLength;
+
+            // 文字数が300を超える場合に警告メッセージを表示
+            if (currentLength > maxLength) {
+                warningMessage.classList.remove('hidden');
+            } else {
+                warningMessage.classList.add('hidden');
+            }
         });
     });
 </script>

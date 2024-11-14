@@ -57,6 +57,13 @@
                                 </div>
                             </div>
 
+                            <div class="mt-4">
+                                <p class="text-gray-700">
+                                    {!! implode('<br>', mb_str_split($user_data->introduction ?? '', 20, 'UTF-8')) !!}
+                                </p>
+                            </div>
+                            
+
                             <p class="text-gray-500">合計評価数：{{ $user_data->total_rate ?? 0 }}</p>
                         </div>
 

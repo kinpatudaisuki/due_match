@@ -96,6 +96,13 @@
                                                 </div>
                                             </div>
 
+                                            <!-- 自己紹介文 -->
+                                            <div class="mt-4">
+                                                <p class="text-gray-700">
+                                                    {{ Str::limit($user->introduction ?? '', 50, '...') }}
+                                                </p>
+                                            </div>
+
                                             <p class="text-gray-500">合計評価数：{{ $user->total_rate ?? 0 }}</p>
 
                                             <p id="select_user_{{ $user->id }}" user_id="{{ $user->id }}" user_name="{{ $user->name }}"></p>

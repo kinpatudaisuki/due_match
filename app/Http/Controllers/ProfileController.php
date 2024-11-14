@@ -49,6 +49,11 @@ class ProfileController extends Controller
             $user->area = $request->input('area');
         }
 
+        // 自己紹介が入力された場合に更新
+        if ($request->filled('introduction')) {
+            $user->introduction = $request->input('introduction');
+        }
+
         // 画像がアップロードされた場合の処理
         if ($request->hasFile('image')) {
             // 古い画像を削除
