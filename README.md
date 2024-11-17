@@ -30,15 +30,13 @@ DB：MariaDB 10.5.25
 ・問い合わせ機能
 
 ### ・実際の画面
-ユーザー一覧と検索
+#### ユーザー一覧と検索
 <img width="1075" alt="Monosnap Due_match 2024-11-12 18-56-53" src="https://github.com/user-attachments/assets/cddc8687-4942-4e47-b28c-16897cf1ede7">
 
-
-
-トーク画面
+#### トーク画面
 <img width="1063" alt="Monosnap Due_match 2024-11-12 18-59-43" src="https://github.com/user-attachments/assets/39316cc4-01f3-40ae-8226-520efb660e48">
+<img width="1135" alt="Monosnap Due_match 2024-11-18 08-37-23" src="https://github.com/user-attachments/assets/a5fe78b1-517e-4b26-beec-68a53f248d1b">
 
-
-
-
+#### ユーザー詳細画面
+<img width="438" alt="Monosnap Due_match 2024-11-18 08-40-28" src="https://github.com/user-attachments/assets/9e46e737-5d59-432c-bba8-902b950e20b1">
 
