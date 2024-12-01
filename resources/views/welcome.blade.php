@@ -33,15 +33,17 @@
 
         @if (Route::has('login'))
             <div class="absolute top-0 right-0 p-6 text-right z-10">
-                @auth
-                    <a href="{{ url('user/index') }}" class="ml-4 font-semibold text-white">ユーザー一覧</a>
-                @else
+
+                <a href="{{ url('user/index') }}" class="ml-4 font-semibold text-white">ユーザー一覧</a>
+
+                @guest
                     <a href="{{ route('login') }}" class="ml-4 font-semibold text-white">ログイン</a>
 
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}" class="ml-4 font-semibold text-white">会員登録</a>
                     @endif
-                @endauth
+                @endguest
+
             </div>
         @endif
 

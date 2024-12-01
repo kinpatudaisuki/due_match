@@ -51,8 +51,8 @@
             @if ($users->isNotEmpty())
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
                     @foreach ($users as $user)
-                        {{-- 自分のIDと異なるユーザーを表示 --}}
-                        @if ($user->id != auth()->user()->id)
+                        {{-- 自分以外のユーザーを認証済みの場合にのみ除外 --}}
+                        @if (!auth()->check() || $user->id != auth()->id())
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4 p-4 w-48 flex flex-col items-center">
                                 <form id="create-room-form">
                                     <div class="flex flex-col items-center space-y-4">
@@ -109,22 +109,25 @@
                                         </div>
                                     </div>
 
-                                    {{-- ブロック状態に応じたメッセージまたはボタンを表示 --}}
-                                    @if (in_array($user->id, $blockers))
-                                        <div class="flex justify-center mt-2">
-                                            <p class="text-sm text-red-500">ブロックされています</p>
-                                        </div>
-                                    @elseif (in_array($user->id, $blockedUsers))
-                                        <div class="flex justify-center mt-2">
-                                            <p class="text-sm text-red-500">ブロックしています</p>
-                                        </div>
-                                    @else
-                                        <div class="flex justify-center mt-2">
-                                            <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded" onclick="startChat({{ $user->id }})">
-                                                トークを開始する
-                                            </button>
-                                        </div>
-                                    @endif
+                                    {{-- ゲストユーザーはトーク開始ボタン非表示 --}}
+                                    @auth
+                                        {{-- ブロック状態に応じたメッセージまたはボタンを表示 --}}
+                                        @if (in_array($user->id, $blockers))
+                                            <div class="flex justify-center mt-2">
+                                                <p class="text-sm text-red-500">ブロックされています</p>
+                                            </div>
+                                        @elseif (in_array($user->id, $blockedUsers))
+                                            <div class="flex justify-center mt-2">
+                                                <p class="text-sm text-red-500">ブロックしています</p>
+                                            </div>
+                                        @else
+                                            <div class="flex justify-center mt-2">
+                                                <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded" onclick="startChat({{ $user->id }})">
+                                                    トークを開始する
+                                                </button>
+                                            </div>
+                                        @endif
+                                    @endauth
 
                                     <div class="flex justify-center mt-2">
                                         <a href="{{ route('user.show', $user->id) }}" class="text-sm bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded">
@@ -151,12 +154,16 @@
         // 選択したユーザーのIDと名前を取得
         const selectUser = document.getElementById('select_user_' + userId);
         const selectUserId = selectUser.getAttribute('user_id');
-        const selectUserName = selectUser.getAttribute('user_name'); // ユーザー名を取得
+        const selectUserName = selectUser.getAttribute('user_name');
+
+        const myId = null;
 
         // 確認ポップアップを表示し、OKが押された場合のみ処理を続行
         if (confirm(`${selectUserName}とトークを開始しますか？`)) {
             // 自分のユーザーIDを取得
-            const myId = {{ auth()->user()->id }};
+            @if(auth()->check())
+                myId = {{ auth()->user()->id }};
+            @endif
 
             // Axiosでサーバーにルーム作成リクエストを送信
             axios.post('/room/store', {

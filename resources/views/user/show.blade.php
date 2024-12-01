@@ -67,45 +67,47 @@
                             <p class="text-gray-500">合計評価数：{{ $user_data->total_rate ?? 0 }}</p>
                         </div>
 
-                        {{-- 評価機能の表示 --}}
-                        <div class="rating-section mt-4">
-                            @if ($isRated)
-                                {{-- 評価済みの場合 --}}
-                                <p class="text-green-500 font-bold">評価済みです</p>
-                            @else
-                                {{-- 未評価の場合 --}}
-                                <div class="flex items-center space-x-2">
-                                    <p class="text-gray-500">このユーザーを評価する:</p>
-                                    <div class="flex space-x-2">
-                                        @for ($i = 1; $i <= 3; $i++)
-                                            <button 
-                                                class="star-btn text-gray-500 hover:text-yellow-500" 
-                                                id="star-{{ $i }}" 
-                                                data-rating="{{ $i }}" 
-                                                onclick="submitRating({{ $user_data->id }}, {{ $i }})"
-                                                onmouseover="highlightStars({{ $i }})"
-                                                onmouseout="resetStars()"
-                                            >
-                                                ★
-                                            </button>
-                                        @endfor
+                        @if (Auth::check())
+                            {{-- 評価機能の表示 --}}
+                            <div class="rating-section mt-4">
+                                @if ($isRated)
+                                    {{-- 評価済みの場合 --}}
+                                    <p class="text-green-500 font-bold">評価済みです</p>
+                                @else
+                                    {{-- 未評価の場合 --}}
+                                    <div class="flex items-center space-x-2">
+                                        <p class="text-gray-500">このユーザーを評価する:</p>
+                                        <div class="flex space-x-2">
+                                            @for ($i = 1; $i <= 3; $i++)
+                                                <button 
+                                                    class="star-btn text-gray-500 hover:text-yellow-500" 
+                                                    id="star-{{ $i }}" 
+                                                    data-rating="{{ $i }}" 
+                                                    onclick="submitRating({{ $user_data->id }}, {{ $i }})"
+                                                    onmouseover="highlightStars({{ $i }})"
+                                                    onmouseout="resetStars()"
+                                                >
+                                                    ★
+                                                </button>
+                                            @endfor
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
-                        </div>
+                                @endif
+                            </div>
 
-                        {{-- ブロック機能の表示 --}}
-                        <div class="block-section mt-6">
-                            @if ($hasBlocked)
-                                <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="unblockUser({{ $user_data->id }})">
-                                    ブロックを解除
-                                </button>
-                            @else
-                                <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="blockUser({{ $user_data->id }})">
-                                    このユーザーをブロック
-                                </button>
-                            @endif
-                        </div>
+                            {{-- ブロック機能の表示 --}}
+                            <div class="block-section mt-6">
+                                @if ($hasBlocked)
+                                    <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="unblockUser({{ $user_data->id }})">
+                                        ブロックを解除
+                                    </button>
+                                @else
+                                    <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="blockUser({{ $user_data->id }})">
+                                        このユーザーをブロック
+                                    </button>
+                                @endif
+                            </div>
+                        @endif
                     @endif
 
                     <div class="mx-auto">

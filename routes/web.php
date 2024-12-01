@@ -12,15 +12,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('user/index', [UserController::class, 'index'])->name('user.index');
+
+Route::get('user/show/{user_id}', [UserController::class, 'show'])->name('user.show');
+
 Route::middleware(['verified'])->group(function(){
 
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
-
-    Route::get('user/index', [UserController::class, 'index'])->name('user.index');
-
-    Route::get('user/show/{user_id}', [UserController::class, 'show'])->name('user.show');
 
     Route::post('rate', [RatingController::class, 'store'])->middleware('auth');
 

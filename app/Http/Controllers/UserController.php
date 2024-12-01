@@ -15,17 +15,14 @@ class UserController extends Controller
         // ログインユーザーの確認
         $currentUserId = Auth::id();
 
-        // ログインしていない場合、ログインページにリダイレクト
-        if (!$currentUserId) {
-            return redirect()->route('login')->with('error', 'ログインが必要です。');
+        // ログインしている場合のみユーザー情報を取得
+        $blockedUsers = [];
+        $blockers = [];
+        if ($currentUserId) {
+            $currentUser = User::findOrFail($currentUserId);
+            $blockedUsers = $currentUser->blockedUsers()->pluck('blocked_id')->toArray();
+            $blockers = $currentUser->blockers()->pluck('blocker_id')->toArray();
         }
-
-        // ログインユーザーの情報を取得
-        $currentUser = User::findOrFail($currentUserId);
-
-        // ログインユーザーがブロックしたユーザーと、ブロックされているユーザーを取得
-        $blockedUsers = $currentUser->blockedUsers()->pluck('blocked_id')->toArray();
-        $blockers = $currentUser->blockers()->pluck('blocker_id')->toArray();
 
         // 検索キーワードを取得
         $keyword = $request->input('keyword');
@@ -47,8 +44,9 @@ class UserController extends Controller
             });
         }
 
+        // エリアでフィルタリング
         if ($area) {
-            $query->where('area', $area); // エリアでフィルタリング
+            $query->where('area', $area);
         }
 
         // ページネーションを適用してユーザーを取得
@@ -76,15 +74,13 @@ class UserController extends Controller
         // 閲覧するユーザーのデータ
         $user_data = User::with('formats')->findOrFail($user_id);
 
-        // 現在のログインユーザーのIDを取得
         $currentUserId = Auth::id();
+        $isRated = false;
+        $hasBlocked = false;
+        $isBlocked = false;
 
-        // ログインユーザーがいない場合はリダイレクトまたはエラーメッセージを表示
-        if (!$currentUserId) {
-            return redirect()->route('login')->with('error', 'ログインが必要です。');
-        }
+    if ($currentUserId) {
 
-        // 現在のログインユーザーをUserモデルから取得
         $currentUser = User::findOrFail($currentUserId);
 
         // ログインユーザーがこのユーザーを評価済みか確認
@@ -97,6 +93,7 @@ class UserController extends Controller
 
         // ログインユーザーがこのユーザーにブロックされているか確認
         $isBlocked = $currentUser->isBlockedBy($user_id);
+    }
 
         return view('user.show', compact('user_data', 'isRated', 'hasBlocked', 'isBlocked'));
     }
