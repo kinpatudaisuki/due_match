@@ -156,7 +156,7 @@
         const selectUserId = selectUser.getAttribute('user_id');
         const selectUserName = selectUser.getAttribute('user_name');
 
-        const myId = null;
+        let myId = null;
 
         // 確認ポップアップを表示し、OKが押された場合のみ処理を続行
         if (confirm(`${selectUserName}とトークを開始しますか？`)) {
