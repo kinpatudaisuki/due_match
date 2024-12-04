@@ -78,8 +78,9 @@
             <div class="mt-2 flex flex-wrap gap-2 sm:gap-4">
                 <button type="button" class="format-btn text-sm" data-format-id="1">オリジナル</button>
                 <button type="button" class="format-btn text-sm" data-format-id="2">アドバンス</button>
-                <button type="button" class="format-btn text-sm" data-format-id="3">2ブロ</button>
+                <button type="button" class="format-btn text-sm" data-format-id="3">2ブロック</button>
                 <button type="button" class="format-btn text-sm" data-format-id="4">デュエパ</button>
+                <button type="button" class="format-btn text-sm" data-format-id="5">殿堂ゼロ</button>
             </div>
 
             <!-- 隠しフィールド -->
