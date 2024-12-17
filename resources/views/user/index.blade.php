@@ -139,6 +139,11 @@
                         @endif
                     @endforeach
                 </div>
+
+                {{-- ページネーションリンクを表示 --}}
+                <div class="mt-6">
+                    {{ $users->links() }}
+                </div>
             @else
                 <p class="text-center text-gray-500">該当するユーザーが見つかりませんでした。</p>
             @endif
