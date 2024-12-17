@@ -70,6 +70,7 @@
                 <button type="button" class="format-btn" data-format-id="3">2ブロック</button>
                 <button type="button" class="format-btn" data-format-id="4">デュエパ</button>
                 <button type="button" class="format-btn" data-format-id="5">殿堂ゼロ</button>
+                <button type="button" class="format-btn" data-format-id="6">シールド戦</button>
             </div>
 
             <!-- 隠しフィールド -->
