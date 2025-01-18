@@ -95,6 +95,28 @@
                                 @endif
                             </div>
 
+                            {{-- フレンド申請ボタン --}}
+                            <div class="mt-6">
+                                @if ($isFriendRequestPending)
+                                    <button class="bg-gray-400 text-white px-4 py-2 rounded-md" disabled>
+                                        フレンド申請済み
+                                    </button>
+                                @elseif ($isReceivedFriendRequest)
+                                    {{-- フレンド申請を受け取った場合 --}}
+                                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md" onclick="approveFriendRequest({{ $user_data->id }})">
+                                        フレンド申請を承認
+                                    </button>
+                                    <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="denyFriendRequest({{ $user_data->id }})">
+                                        フレンド申請を拒否
+                                    </button>
+                                @else
+                                    {{-- フレンド申請が送られていない場合 --}}
+                                    <button class="bg-green-500 text-white px-4 py-2 rounded-md" onclick="sendFriendRequest({{ $user_data->id }}, this)">
+                                        フレンド申請を送る
+                                    </button>
+                                @endif
+                            </div>
+
                             {{-- ブロック機能の表示 --}}
                             <div class="block-section mt-6">
                                 @if ($hasBlocked)
@@ -169,6 +191,67 @@
     function resetStars() {
         // マウスが外れたら現在の評価に応じて星の色を元に戻す
         updateStarRating(currentRating);
+    }
+
+    function sendFriendRequest(userId, button) {
+        axios.post(`/friends/request/${userId}`, {
+            user_id: userId
+        }, {
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            if (response.data.success) {
+                button.textContent = "申請済み";
+                button.disabled = true;
+                button.classList.remove("bg-green-500");
+                button.classList.add("bg-gray-400");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
+    function approveFriendRequest(userId) {
+        axios.post(`/friends/approve/${userId}`, {}, {
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            if (response.data.success) {
+                alert("フレンド申請を承認しました！");
+                location.reload(); // ページをリロードして最新の状態に更新
+            } else {
+                alert("承認に失敗しました。");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("エラーが発生しました。");
+        });
+    }
+
+    function denyFriendRequest(userId) {
+        if (!confirm('このフレンド申請を拒否しますか？')) {
+            return;
+        }
+
+        axios.delete(`/friends/deny/${userId}`)
+            .then(response => {
+                if (response.data.success) {
+                    alert(response.data.message);
+                    location.reload(); // ページをリロードしてボタンを更新
+                } else {
+                    alert(response.data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("エラーが発生しました。");
+            });
     }
 
     // ユーザーをブロック

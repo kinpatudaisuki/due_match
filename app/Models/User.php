@@ -81,4 +81,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function formats() {
         return $this->belongsToMany(Format::class)->withTimestamps();
     }
+
+    // 実際にフレンドになったユーザー
+    public function acceptedFriends() {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+                    ->wherePivot('status', 'accept')
+                    ->withTimestamps();
+    }
+
+    // 自分が送ったフレンド申請
+    public function pendingRequests() {
+        return $this->hasMany(Friend::class, 'user_id')
+                    ->where('status', 'pending')
+                    ->with('friend');
+    }
+
+    // 送られてきたフレンド申請
+    public function approvalWaiting() {
+        return $this->hasMany(Friend::class, 'friend_id')
+                    ->where('status', 'pending')
+                    ->with('user');
+    }
+
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\FriendController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,17 +33,24 @@ Route::middleware(['verified'])->group(function(){
 
     Route::post('/room/leave/{room}', [RoomController::class, 'leave'])->name('room.leave');
 
-    // メッセージ送信
     Route::post('/room/{room_id}/send_message', [RoomController::class, 'sendMessage'])->name('room.sendMessage');
 
-    //ユーザー招待
     Route::post('/room/{room_id}/invite', [RoomController::class, 'inviteUser']);
 
     Route::get('/block/index', [BlockController::class, 'index'])->name('block.index');
 
-    //ブロックとブロック解除
     Route::post('/block/{user_id}', [BlockController::class, 'block'])->middleware('auth');
     Route::post('/unblock/{user_id}', [BlockController::class, 'unblock'])->middleware('auth');
+
+    Route::get('friend/index', [FriendController::class, 'index'])->name('friend.index');
+
+    Route::post('/friends/request/{user_id}', [FriendController::class, 'sendRequest'])->middleware('auth');
+
+    Route::post('/friends/approve/{userId}', [FriendController::class, 'approveFriendRequest']);
+
+    Route::delete('/friends/deny/{userId}', [FriendController::class, 'denyFriendRequest'])->name('friends.deny');
+
+
 });
 
 //問い合わせの作成と保存

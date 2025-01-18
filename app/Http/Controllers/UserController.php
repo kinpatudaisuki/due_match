@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Rating;
 use App\Models\Block;
 use App\Models\Format;
+use App\Models\Friend;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -78,24 +79,32 @@ class UserController extends Controller
         $isRated = false;
         $hasBlocked = false;
         $isBlocked = false;
+        $isFriendRequestPending = false;
+        $isReceivedFriendRequest = false;
 
-    if ($currentUserId) {
+        if ($currentUserId) {
 
-        $currentUser = User::findOrFail($currentUserId);
+            $currentUser = User::findOrFail($currentUserId);
 
-        // ログインユーザーがこのユーザーを評価済みか確認
-        $isRated = Rating::where('rater_id', $currentUserId)
-                          ->where('rated_id', $user_id)
-                          ->exists();
+            // ログインユーザーがこのユーザーを評価済みか確認
+            $isRated = Rating::where('rater_id', $currentUserId)
+                            ->where('rated_id', $user_id)
+                            ->exists();
 
-        // ログインユーザーがこのユーザーをブロックしているか確認
-        $hasBlocked = $currentUser->hasBlocked($user_id);
+            // ログインユーザーがこのユーザーをブロックしているか確認
+            $hasBlocked = $currentUser->hasBlocked($user_id);
 
-        // ログインユーザーがこのユーザーにブロックされているか確認
-        $isBlocked = $currentUser->isBlockedBy($user_id);
-    }
+            // ログインユーザーがこのユーザーにブロックされているか確認
+            $isBlocked = $currentUser->isBlockedBy($user_id);
 
-        return view('user.show', compact('user_data', 'isRated', 'hasBlocked', 'isBlocked'));
+            // ログインユーザーがこのユーザーへフレンド申請済みか確認
+            $isFriendRequestPending = Friend::isPendingRequest($currentUserId, $user_id);
+
+            // ログインユーザーがこのユーザーからフレンド申請受け取り済みか確認
+            $isReceivedFriendRequest = Friend::hasReceivedFriendRequest($currentUserId, $user_id);
+        }
+
+        return view('user.show', compact('user_data', 'isRated', 'hasBlocked', 'isBlocked', 'isFriendRequestPending', 'isReceivedFriendRequest'));
     }
 
 }
