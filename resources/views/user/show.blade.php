@@ -109,6 +109,11 @@
                                     <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="denyFriendRequest({{ $user_data->id }})">
                                         フレンド申請を拒否
                                     </button>
+                                @elseif ($isFriend) 
+                                    {{-- フレンド関係なら解除ボタンを表示 --}}
+                                    <button class="bg-red-600 text-white px-4 py-2 rounded-md" onclick="removeFriend({{ $user_data->id }})">
+                                        フレンド解除
+                                    </button>
                                 @else
                                     {{-- フレンド申請が送られていない場合 --}}
                                     <button class="bg-green-500 text-white px-4 py-2 rounded-md" onclick="sendFriendRequest({{ $user_data->id }}, this)">
@@ -240,6 +245,26 @@
         }
 
         axios.delete(`/friends/deny/${userId}`)
+            .then(response => {
+                if (response.data.success) {
+                    alert(response.data.message);
+                    location.reload(); // ページをリロードしてボタンを更新
+                } else {
+                    alert(response.data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("エラーが発生しました。");
+            });
+    }
+
+    function removeFriend(userId) {
+        if (!confirm('本当にフレンドを解除しますか？')) {
+            return;
+        }
+
+        axios.delete(`/friends/remove/${userId}`)
             .then(response => {
                 if (response.data.success) {
                     alert(response.data.message);

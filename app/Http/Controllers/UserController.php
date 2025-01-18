@@ -81,6 +81,7 @@ class UserController extends Controller
         $isBlocked = false;
         $isFriendRequestPending = false;
         $isReceivedFriendRequest = false;
+        $isFriend = false;
 
         if ($currentUserId) {
 
@@ -102,9 +103,13 @@ class UserController extends Controller
 
             // ログインユーザーがこのユーザーからフレンド申請受け取り済みか確認
             $isReceivedFriendRequest = Friend::hasReceivedFriendRequest($currentUserId, $user_id);
+
+            // ログインユーザーがこのユーザーとフレンドか確認
+            $isFriend = Friend::isFriend($currentUserId, $user_id);
+
         }
 
-        return view('user.show', compact('user_data', 'isRated', 'hasBlocked', 'isBlocked', 'isFriendRequestPending', 'isReceivedFriendRequest'));
+        return view('user.show', compact('user_data', 'isRated', 'hasBlocked', 'isBlocked', 'isFriendRequestPending', 'isReceivedFriendRequest', 'isFriend'));
     }
 
 }

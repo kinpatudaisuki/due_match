@@ -50,6 +50,7 @@ Route::middleware(['verified'])->group(function(){
 
     Route::delete('/friends/deny/{userId}', [FriendController::class, 'denyFriendRequest'])->name('friends.deny');
 
+    Route::delete('/friends/remove/{userId}', [FriendController::class, 'removeFriend'])->name('friends.remove');
 
 });
 

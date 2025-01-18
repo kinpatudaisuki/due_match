@@ -21,18 +21,34 @@ class Friend extends Model
         return $this->belongsTo(User::class, 'friend_id');
     }
 
+    // フレンドリクエストを申請済みか判定
     public static function isPendingRequest($currentUserId, $userId) {
         return self::where('user_id', $currentUserId)
                    ->where('friend_id', $userId)
                    ->where('status', 'pending')
                    ->exists();
+    }
 
-                }
+    // フレンド申請を受け取っているか判定
     public static function hasReceivedFriendRequest($currentUserId, $userId) {
         return self::where('user_id', $userId)
                     ->where('friend_id', $currentUserId)
                     ->where('status', 'pending')
                     ->exists();
+    }
+
+    // 指定したユーザーとフレンド関係にあるかを判定
+    public static function isFriend($userId, $friendId) {
+        return self::where(function ($query) use ($userId, $friendId) {
+                $query->where('user_id', $userId)
+                      ->where('friend_id', $friendId);
+            })
+            ->orWhere(function ($query) use ($userId, $friendId) {
+                $query->where('user_id', $friendId)
+                      ->where('friend_id', $userId);
+            })
+            ->where('status', 'accept')
+            ->exists();
     }
 
 }

@@ -83,4 +83,26 @@ class FriendController extends Controller
         return response()->json(['success' => false, 'message' => 'フレンド申請が見つかりませんでした。']);
     }
 
+    public function removeFriend($userId) {
+        $currentUserId = Auth::id();
+    
+        if (!Friend::isFriend($currentUserId, $userId)) {
+            return response()->json(['success' => false, 'message' => 'フレンド関係が見つかりませんでした。']);
+        }
+    
+        // フレンド関係を削除
+        $deleted = Friend::where(function ($query) use ($userId, $currentUserId) {
+                $query->where('user_id', $currentUserId)
+                      ->where('friend_id', $userId);
+            })
+            ->orWhere(function ($query) use ($userId, $currentUserId) {
+                $query->where('user_id', $userId)
+                      ->where('friend_id', $currentUserId);
+            })
+            ->where('status', 'accept')
+            ->delete();
+    
+        return response()->json(['success' => $deleted, 'message' => $deleted ? 'フレンドを解除しました。' : 'フレンド解除に失敗しました。']);
+    }
+
 }
