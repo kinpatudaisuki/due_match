@@ -40,6 +40,9 @@ Route::middleware(['verified'])->group(function(){
     Route::get('/block/index', [BlockController::class, 'index'])->name('block.index');
 
     Route::post('/block/{user_id}', [BlockController::class, 'block'])->middleware('auth');
+
+    Route::post('/block/remove-friendship/{userId}', [FriendController::class, 'removeFriendshipOnBlock']);
+
     Route::post('/unblock/{user_id}', [BlockController::class, 'unblock'])->middleware('auth');
 
     Route::get('friend/index', [FriendController::class, 'index'])->name('friend.index');

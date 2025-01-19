@@ -105,4 +105,19 @@ class FriendController extends Controller
         return response()->json(['success' => $deleted, 'message' => $deleted ? 'フレンドを解除しました。' : 'フレンド解除に失敗しました。']);
     }
 
+    public function removeFriendshipOnBlock($userId) {
+        $currentUserId = Auth::id();
+    
+        // まずフレンド申請の削除を試みる
+        $response = $this->denyFriendRequest($userId);
+        $responseData = json_decode($response->getContent(), true);
+    
+        // フレンド申請が見つからなかった場合、フレンド関係の削除を試みる
+        if (!$responseData['success']) {
+            $response = $this->removeFriend($userId);
+        }
+    
+        return $response;
+    }
+
 }

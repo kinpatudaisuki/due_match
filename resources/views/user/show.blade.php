@@ -96,31 +96,33 @@
                             </div>
 
                             {{-- フレンド申請ボタン --}}
-                            <div class="mt-6">
-                                @if ($isFriendRequestPending)
-                                    <button class="bg-gray-400 text-white px-4 py-2 rounded-md" disabled>
-                                        フレンド申請済み
-                                    </button>
-                                @elseif ($isReceivedFriendRequest)
-                                    {{-- フレンド申請を受け取った場合 --}}
-                                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md" onclick="approveFriendRequest({{ $user_data->id }})">
-                                        フレンド申請を承認
-                                    </button>
-                                    <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="denyFriendRequest({{ $user_data->id }})">
-                                        フレンド申請を拒否
-                                    </button>
-                                @elseif ($isFriend) 
-                                    {{-- フレンド関係なら解除ボタンを表示 --}}
-                                    <button class="bg-red-600 text-white px-4 py-2 rounded-md" onclick="removeFriend({{ $user_data->id }})">
-                                        フレンド解除
-                                    </button>
-                                @else
-                                    {{-- フレンド申請が送られていない場合 --}}
-                                    <button class="bg-green-500 text-white px-4 py-2 rounded-md" onclick="sendFriendRequest({{ $user_data->id }}, this)">
-                                        フレンド申請を送る
-                                    </button>
-                                @endif
-                            </div>
+                            @if (!$hasBlocked && !$isBlocked) 
+                                <div class="mt-6">
+                                    @if ($isFriendRequestPending)
+                                        <button class="bg-gray-400 text-white px-4 py-2 rounded-md" disabled>
+                                            フレンド申請済み
+                                        </button>
+                                    @elseif ($isReceivedFriendRequest)
+                                        {{-- フレンド申請を受け取った場合 --}}
+                                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md" onclick="approveFriendRequest({{ $user_data->id }})">
+                                            フレンド申請を承認
+                                        </button>
+                                        <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="denyFriendRequest({{ $user_data->id }})">
+                                            フレンド申請を拒否
+                                        </button>
+                                    @elseif ($isFriend) 
+                                        {{-- フレンド関係なら解除ボタンを表示 --}}
+                                        <button class="bg-red-600 text-white px-4 py-2 rounded-md" onclick="removeFriend({{ $user_data->id }})">
+                                            フレンド解除
+                                        </button>
+                                    @else
+                                        {{-- フレンド申請が送られていない場合 --}}
+                                        <button class="bg-green-500 text-white px-4 py-2 rounded-md" onclick="sendFriendRequest({{ $user_data->id }}, this)">
+                                            フレンド申請を送る
+                                        </button>
+                                    @endif
+                                </div>
+                            @endif
 
                             {{-- ブロック機能の表示 --}}
                             <div class="block-section mt-6">
@@ -162,7 +164,7 @@
                 alert(response.data.message);
                 currentRating = rating;  // 評価を保存
                 updateStarRating(rating);  // 確定した評価に基づいて星を更新
-                location.reload();  // ページをリロードして評価済み表示に変更（オプション）
+                location.reload();  // ページをリロードして評価済み表示に変更
             })
             .catch(function (error) {
                 console.error(error);
@@ -285,6 +287,16 @@
             axios.post('/block/' + userId)
                 .then(function (response) {
                     alert(response.data.message);
+
+                    // フレンド申請またはフレンド関係を削除
+                    axios.post('/block/remove-friendship/' + userId)
+                        .then(function (response) {
+                            console.log('フレンド申請・関係を削除:', response.data);
+                        })
+                        .catch(function (error) {
+                            console.error('フレンドデータの削除に失敗:', error);
+                        });
+
                     location.reload();  // ページをリロードしてブロック表示を更新
                 })
                 .catch(function (error) {
