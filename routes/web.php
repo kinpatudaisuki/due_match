@@ -47,13 +47,13 @@ Route::middleware(['verified'])->group(function(){
 
     Route::get('friend/index', [FriendController::class, 'index'])->name('friend.index');
 
-    Route::post('/friends/request/{user_id}', [FriendController::class, 'sendRequest'])->middleware('auth');
+    Route::post('/friend/request/{user_id}', [FriendController::class, 'sendRequest'])->middleware('auth');
 
-    Route::post('/friends/approve/{userId}', [FriendController::class, 'approveFriendRequest']);
+    Route::post('/friend/approve/{userId}', [FriendController::class, 'approveFriendRequest']);
 
-    Route::delete('/friends/deny/{userId}', [FriendController::class, 'denyFriendRequest'])->name('friends.deny');
+    Route::delete('/friend/deny/{userId}', [FriendController::class, 'denyFriendRequest'])->name('friend.deny');
 
-    Route::delete('/friends/remove/{userId}', [FriendController::class, 'removeFriend'])->name('friends.remove');
+    Route::delete('/friend/remove/{userId}', [FriendController::class, 'removeFriend'])->name('friend.remove');
 
 });
 

@@ -201,7 +201,7 @@
     }
 
     function sendFriendRequest(userId, button) {
-        axios.post(`/friends/request/${userId}`, {
+        axios.post(`/friend/request/${userId}`, {
             user_id: userId
         }, {
             headers: {
@@ -222,7 +222,7 @@
     }
 
     function approveFriendRequest(userId) {
-        axios.post(`/friends/approve/${userId}`, {}, {
+        axios.post(`/friend/approve/${userId}`, {}, {
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
@@ -246,7 +246,7 @@
             return;
         }
 
-        axios.delete(`/friends/deny/${userId}`)
+        axios.delete(`/friend/deny/${userId}`)
             .then(response => {
                 if (response.data.success) {
                     alert(response.data.message);
@@ -266,7 +266,7 @@
             return;
         }
 
-        axios.delete(`/friends/remove/${userId}`)
+        axios.delete(`/friend/remove/${userId}`)
             .then(response => {
                 if (response.data.success) {
                     alert(response.data.message);
