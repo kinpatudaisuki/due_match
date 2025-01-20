@@ -102,14 +102,18 @@
                                         <button class="bg-gray-400 text-white px-4 py-2 rounded-md" disabled>
                                             フレンド申請済み
                                         </button>
-                                    @elseif ($isReceivedFriendRequest)
+                                        @elseif ($isReceivedFriendRequest)
                                         {{-- フレンド申請を受け取った場合 --}}
-                                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md" onclick="approveFriendRequest({{ $user_data->id }})">
-                                            フレンド申請を承認
-                                        </button>
-                                        <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="denyFriendRequest({{ $user_data->id }})">
-                                            フレンド申請を拒否
-                                        </button>
+                                        <div class="flex flex-col sm:flex-row gap-2">
+                                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full sm:w-auto"
+                                                    onclick="approveFriendRequest({{ $user_data->id }})">
+                                                フレンド申請を承認
+                                            </button>
+                                            <button class="bg-red-500 text-white px-4 py-2 rounded-md w-full sm:w-auto"
+                                                    onclick="denyFriendRequest({{ $user_data->id }})">
+                                                フレンド申請を拒否
+                                            </button>
+                                        </div>
                                     @elseif ($isFriend) 
                                         {{-- フレンド関係なら解除ボタンを表示 --}}
                                         <button class="bg-red-600 text-white px-4 py-2 rounded-md" onclick="removeFriend({{ $user_data->id }})">
@@ -140,8 +144,8 @@
                     @endif
 
                     <div class="mx-auto">
-                        <a href="{{ route('user.index') }}" class="block w-48 mx-auto text-center bg-blue-500 text-white py-2 rounded-md">
-                            ユーザー一覧に戻る
+                        <a href="javascript:history.back()" class="block w-48 mx-auto text-center bg-blue-500 text-white py-2 rounded-md">
+                            戻る
                         </a>
                     </div>
 
