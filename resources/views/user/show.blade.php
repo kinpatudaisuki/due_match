@@ -95,6 +95,26 @@
                                 @endif
                             </div>
 
+                            {{-- ゲストユーザーはトーク開始ボタン非表示 --}}
+                            @auth
+                                {{-- ブロック状態に応じたメッセージまたはボタンを表示 --}}
+                                @if ($hasBlocked)
+                                    <div class="flex justify-center mt-2">
+                                        <p class="text-red-500">ブロックしています</p>
+                                    </div>
+                                @else
+                                    <div class="flex justify-center mt-2">
+                                        <button type="button" 
+                                                class="bg-blue-500 text-white py-2 px-4 rounded"
+                                                data-user-id="{{ $user_data->id }}" 
+                                                data-user-name="{{ $user_data->name }}" 
+                                                onclick="startChat(this)">
+                                            トークを開始する
+                                        </button>
+                                    </div>
+                                @endif
+                            @endauth
+
                             {{-- フレンド申請ボタン --}}
                             @if (!$hasBlocked && !$isBlocked) 
                                 <div class="mt-6">
@@ -202,6 +222,44 @@
     function resetStars() {
         // マウスが外れたら現在の評価に応じて星の色を元に戻す
         updateStarRating(currentRating);
+    }
+
+    function startChat(button) {
+        // フォームのデフォルト送信を防ぐ
+        event.preventDefault();
+
+        // ボタンのデータ属性からユーザーIDと名前を取得
+        const selectUserId = button.getAttribute('data-user-id');
+        const selectUserName = button.getAttribute('data-user-name');
+
+        let myId = null;
+
+        // 確認ポップアップを表示し、OKが押された場合のみ処理を続行
+        if (confirm(`${selectUserName}とトークを開始しますか？`)) {
+            // 自分のユーザーIDを取得
+            @if(auth()->check())
+                myId = {{ auth()->user()->id }};
+            @endif
+
+            // Axiosでサーバーにルーム作成リクエストを送信
+            axios.post('/room/store', {
+                user_ids: [myId, selectUserId]
+            })
+            .then(function(response) {
+                // レスポンスにmessageが含まれていればアラートで表示
+                if (response.data.message) {
+                    alert(response.data.message);
+                }
+
+                // ルームIDに基づいてリダイレクト
+                const roomId = response.data.room_id;
+                window.location.href = `/room/show/${roomId}`;
+            })
+            .catch(function(error) {
+                console.error(error);
+                alert('ルーム作成に失敗しました');
+            });
+        }
     }
 
     function sendFriendRequest(userId, button) {
