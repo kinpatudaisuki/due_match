@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Friend;
+use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendFriendRequestEmail;
 
 class FriendController extends Controller
 {
@@ -21,6 +23,7 @@ class FriendController extends Controller
 
     public function sendRequest(Request $request, $userId) {
         $user = Auth::user();
+        $recipient = User::findOrFail($userId);
 
         // 既にフレンド申請があるか確認
         if (Friend::where('user_id', $user->id)->where('friend_id', $userId)->exists()) {
@@ -33,6 +36,9 @@ class FriendController extends Controller
             'friend_id' => $userId,
             'status' => 'pending'
         ]);
+
+        // フレンド申請通知をメールで送信（非同期処理）
+        SendFriendRequestEmail::dispatch($recipient->email, $user->name);
 
         return response()->json(['success' => true, 'message' => 'フレンド申請を送信しました。']);
     }
