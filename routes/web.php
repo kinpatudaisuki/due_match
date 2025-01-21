@@ -41,7 +41,7 @@ Route::middleware(['verified'])->group(function(){
 
     Route::post('/block/{user_id}', [BlockController::class, 'block'])->middleware('auth');
 
-    Route::post('/block/remove-friendship/{userId}', [FriendController::class, 'removeFriendshipOnBlock']);
+    Route::post('/friend/blockFriendship/{userId}', [FriendController::class, 'blockFriendship']);
 
     Route::post('/unblock/{user_id}', [BlockController::class, 'unblock'])->middleware('auth');
 

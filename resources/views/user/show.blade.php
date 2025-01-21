@@ -351,7 +351,7 @@
                     alert(response.data.message);
 
                     // フレンド申請またはフレンド関係を削除
-                    axios.post('/block/remove-friendship/' + userId)
+                    axios.post('/friend/blockFriendship/' + userId)
                         .then(function (response) {
                             console.log('フレンド申請・関係を削除:', response.data);
                         })

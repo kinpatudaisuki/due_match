@@ -21,7 +21,6 @@ class FriendController extends Controller
 
     public function sendRequest(Request $request, $userId) {
         $user = Auth::user();
-        $targetUser = User::findOrFail($userId);
 
         // 既にフレンド申請があるか確認
         if (Friend::where('user_id', $user->id)->where('friend_id', $userId)->exists()) {
@@ -105,8 +104,7 @@ class FriendController extends Controller
         return response()->json(['success' => $deleted, 'message' => $deleted ? 'フレンドを解除しました。' : 'フレンド解除に失敗しました。']);
     }
 
-    public function removeFriendshipOnBlock($userId) {
-        $currentUserId = Auth::id();
+    public function blockFriendship($userId) {
 
         // まずフレンド申請の削除を試みる
         $response = $this->denyFriendRequest($userId);
