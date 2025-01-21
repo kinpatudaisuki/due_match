@@ -43,5 +43,6 @@ DB：MariaDB 10.5.25
 <img width="358" alt="Monosnap Due_match 2025-01-21 17-17-01" src="https://github.com/user-attachments/assets/e176cf64-92bc-4099-ba92-b6967c1a45fb" />
 
 ### フレンド一覧画面
-<img width="751" alt="Monosnap Due_match 2025-01-21 17-19-00" src="https://github.com/user-attachments/assets/b19f660d-193b-46af-8495-fe052e85d1a1" />
+<img width="748" alt="Monosnap Due_match 2025-01-22 02-51-24" src="https://github.com/user-attachments/assets/0f6bd56a-3a4b-4861-94a5-a30bd7ea3a5f" />
+
 
