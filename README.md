@@ -27,6 +27,7 @@ DB：MariaDB 10.5.25
 ・トーク機能<br>
 ・トークに新規メッセージがあることをメール通知する機能<br>
 ・トークに他ユーザーを招待する機能<br>
+・フレンド機能
 ・問い合わせ機能
 
 ### ・実際の画面
@@ -38,5 +39,9 @@ DB：MariaDB 10.5.25
 <img width="1135" alt="Monosnap Due_match 2024-11-18 08-37-23" src="https://github.com/user-attachments/assets/a5fe78b1-517e-4b26-beec-68a53f248d1b">
 
 #### ユーザー詳細画面
-<img width="438" alt="Monosnap Due_match 2024-11-18 08-40-28" src="https://github.com/user-attachments/assets/9e46e737-5d59-432c-bba8-902b950e20b1">
+<img width="482" alt="Monosnap Due_match 2025-01-21 17-16-19" src="https://github.com/user-attachments/assets/da4d420d-13ca-4749-a0a6-22638f7ab87b" /><br>
+<img width="358" alt="Monosnap Due_match 2025-01-21 17-17-01" src="https://github.com/user-attachments/assets/e176cf64-92bc-4099-ba92-b6967c1a45fb" />
+
+### フレンド一覧画面
+<img width="751" alt="Monosnap Due_match 2025-01-21 17-19-00" src="https://github.com/user-attachments/assets/b19f660d-193b-46af-8495-fe052e85d1a1" />
 
