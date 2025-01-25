@@ -29,25 +29,27 @@
                 <div class="space-y-4">
                     @if ($acceptedFriends && count($acceptedFriends) > 0)
                         @foreach($acceptedFriends as $friend)
-                            <a href="{{ url('user/show', $friend->id) }}" class="block bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-gray-100 transition">
-                                @if ($friend->image)
-                                    @if (app()->environment('production'))
-                                        <img src="{{ Storage::disk('s3')->url($friend->image) }}" alt="{{ $friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                            @if ($friend) {{-- friendがnullでないかチェック --}}
+                                <a href="{{ url('user/show', optional($friend)->id) }}" class="block bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-gray-100 transition">
+                                    @if (optional($friend)->image)
+                                        @if (app()->environment('production'))
+                                            <img src="{{ Storage::disk('s3')->url($friend->image) }}" alt="{{ $friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @else
+                                            <img src="{{ asset('storage/' . $friend->image) }}" alt="{{ $friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @endif
                                     @else
-                                        <img src="{{ asset('storage/' . $friend->image) }}" alt="{{ $friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+                                            <span class="text-sm text-gray-700">{{ strtoupper(substr(optional($friend)->name, 0, 1)) }}</span>
+                                        </div>
                                     @endif
-                                @else
-                                    <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                                        <span class="text-sm text-gray-700">{{ strtoupper(substr($friend->name, 0, 1)) }}</span>
+                                    <div class="ml-4 flex-1">
+                                        <h3 class="text-lg font-semibold">{{ optional($friend)->name }}</h3>
+                                        <p class="text-gray-600 text-sm mt-1">
+                                            {{ optional($friend)->introduction ?? '' }}
+                                        </p>
                                     </div>
-                                @endif
-                                <div class="ml-4 flex-1">
-                                    <h3 class="text-lg font-semibold">{{ $friend->name }}</h3>
-                                    <p class="text-gray-600 text-sm mt-1">
-                                        {{ $friend->introduction ?? '' }}
-                                    </p>
-                                </div>
-                            </a>
+                                </a>
+                            @endif
                         @endforeach
                     @else
                         <p class="text-center text-gray-500">フレンドがいません</p>
@@ -61,25 +63,27 @@
                 <div class="space-y-4">
                     @if ($pendingFriends && $pendingFriends->isNotEmpty())
                         @foreach($pendingFriends as $pending)
-                            <a href="{{ route('user.show', $pending->friend->id) }}" class="block bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-gray-100 transition">
-                                @if ($pending->friend->image)
-                                    @if (app()->environment('production'))
-                                        <img src="{{ Storage::disk('s3')->url($pending->friend->image) }}" alt="{{ $pending->friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                            @if ($pending->friend) {{-- friendがnullでないかチェック --}}
+                                <a href="{{ route('user.show', optional($pending->friend)->id) }}" class="block bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-gray-100 transition">
+                                    @if (optional($pending->friend)->image)
+                                        @if (app()->environment('production'))
+                                            <img src="{{ Storage::disk('s3')->url($pending->friend->image) }}" alt="{{ $pending->friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @else
+                                            <img src="{{ asset('storage/' . $pending->friend->image) }}" alt="{{ $pending->friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @endif
                                     @else
-                                        <img src="{{ asset('storage/' . $pending->friend->image) }}" alt="{{ $pending->friend->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+                                            <span class="text-sm text-gray-700">{{ strtoupper(substr(optional($pending->friend)->name, 0, 1)) }}</span>
+                                        </div>
                                     @endif
-                                @else
-                                    <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                                        <span class="text-sm text-gray-700">{{ strtoupper(substr($pending->friend->name, 0, 1)) }}</span>
+                                    <div class="ml-4 flex-1">
+                                        <h3 class="text-lg font-semibold">{{ optional($pending->friend)->name }}</h3>
+                                        <p class="text-gray-600 text-sm mt-1">
+                                            {{ optional($pending->friend)->introduction ?? '' }}
+                                        </p>
                                     </div>
-                                @endif
-                                <div class="ml-4 flex-1">
-                                    <h3 class="text-lg font-semibold">{{ $pending->friend->name }}</h3>
-                                    <p class="text-gray-600 text-sm mt-1">
-                                        {{ $pending->friend->introduction ?? '' }}
-                                    </p>
-                                </div>
-                            </a>
+                                </a>
+                            @endif
                         @endforeach
                     @else
                         <p class="text-center text-gray-500">申請中のフレンドはありません</p>
@@ -93,25 +97,27 @@
                 <div class="space-y-4">
                     @if ($approvalWaiting && $approvalWaiting->isNotEmpty())
                         @foreach($approvalWaiting as $waiting)
-                            <a href="{{ route('user.show', $waiting->user->id) }}" class="block bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-gray-100 transition">
-                                @if ($waiting->user->image)
-                                    @if (app()->environment('production'))
-                                        <img src="{{ Storage::disk('s3')->url($waiting->user->image) }}" alt="{{ $waiting->user->name }}" class="w-12 h-12 rounded-full object-cover">
+                            @if ($waiting->user) {{-- userがnullでないかチェック --}}
+                                <a href="{{ route('user.show', optional($waiting->user)->id) }}" class="block bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-gray-100 transition">
+                                    @if (optional($waiting->user)->image)
+                                        @if (app()->environment('production'))
+                                            <img src="{{ Storage::disk('s3')->url($waiting->user->image) }}" alt="{{ $waiting->user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @else
+                                            <img src="{{ asset('storage/' . $waiting->user->image) }}" alt="{{ $waiting->user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @endif
                                     @else
-                                        <img src="{{ asset('storage/' . $waiting->user->image) }}" alt="{{ $waiting->user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+                                            <span class="text-sm text-gray-700">{{ strtoupper(substr(optional($waiting->user)->name, 0, 1)) }}</span>
+                                        </div>
                                     @endif
-                                @else
-                                    <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                                        <span class="text-sm text-gray-700">{{ strtoupper(substr($waiting->user->name, 0, 1)) }}</span>
+                                    <div class="ml-4 flex-1">
+                                        <h3 class="text-lg font-semibold">{{ optional($waiting->user)->name }}</h3>
+                                        <p class="text-gray-600 text-sm mt-1">
+                                            {{ optional($waiting->user)->introduction ?? '' }}
+                                        </p>
                                     </div>
-                                @endif
-                                <div class="ml-4 flex-1">
-                                    <h3 class="text-lg font-semibold">{{ $waiting->user->name }}</h3>
-                                    <p class="text-gray-600 text-sm mt-1">
-                                        {{ $waiting->user->introduction ?? '' }}
-                                    </p>
-                                </div>
-                            </a>
+                                </a>
+                            @endif
                         @endforeach
                     @else
                         <p class="text-center text-gray-500">承認待機中のフレンドはありません</p>
