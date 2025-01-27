@@ -23,20 +23,13 @@ class FriendRequestNotification extends Mailable
         $this->senderName = $senderName;
     }
 
-    public function build()
-    {
-        return $this->subject('新しいフレンド申請')
-                    ->view('emails.friend_request')
-                    ->with(['senderName' => $this->senderName]);
-    }
-
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Friend Request Notification',
+            subject: 'フレンドリクエストのお知らせ',
         );
     }
 

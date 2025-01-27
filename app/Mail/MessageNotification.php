@@ -31,7 +31,7 @@ class MessageNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Message Notification',
+            subject: 'メッセージが届きました',
         );
     }
 
