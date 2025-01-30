@@ -11,7 +11,9 @@
     <!-- 検索フォーム -->
     <div class="py-4 text-center">
         <form action="{{ route('user.index') }}" method="GET">
-            <input type="text" name="keyword" placeholder="ユーザー名で検索" value="{{ request('keyword') }}" class="border rounded p-2">
+            <input type="text" name="userName" placeholder="ユーザー名で検索" value="{{ request('userName') }}" class="border rounded p-2">
+
+            <input type="text" name="intro" placeholder="自己紹介文で検索" value="{{ request('intro') }}" class="border rounded p-2">
 
             <!-- フォーマット選択 -->
             <select name="format_id" class="border rounded p-2 w-56">

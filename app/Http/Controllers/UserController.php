@@ -25,8 +25,10 @@ class UserController extends Controller
             $blockers = $currentUser->blockers()->pluck('blocker_id')->toArray();
         }
 
-        // 検索キーワードを取得
-        $keyword = $request->input('keyword');
+        // 検索ユーザー名を取得
+        $userName = $request->input('userName');
+        // 検索ユーザー名を取得
+        $intro = $request->input('intro');
         // フォーマットIDを取得
         $formatId = $request->input('format_id');
         // エリアを取得
@@ -35,8 +37,12 @@ class UserController extends Controller
         // ユーザーを取得し、検索キーワードとフォーマットでフィルタリング
         $query = User::with('formats');
 
-        if ($keyword) {
-            $query->where('name', 'like', '%' . $keyword . '%');
+        if ($userName) {
+            $query->where('name', 'like', '%' . $userName . '%');
+        }
+
+        if ($intro) {
+            $query->where('introduction', 'like', '%' . $intro . '%');
         }
 
         if ($formatId) {
@@ -67,7 +73,7 @@ class UserController extends Controller
             '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'
         ];
 
-        return view('user.index', compact('users', 'blockedUsers', 'blockers', 'keyword', 'formatId', 'formats', 'areas'));
+        return view('user.index', compact('users', 'blockedUsers', 'blockers', 'userName', 'formatId', 'formats', 'areas'));
     }
 
     public function show($user_id) {
