@@ -27,7 +27,7 @@ class UserController extends Controller
 
         // 検索ユーザー名を取得
         $userName = $request->input('userName');
-        // 検索ユーザー名を取得
+        // 自己紹介文の検索キーワードを取得
         $intro = $request->input('intro');
         // フォーマットIDを取得
         $formatId = $request->input('format_id');
