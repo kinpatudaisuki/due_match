@@ -34,7 +34,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'area' => ['required'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'formats' => ['nullable', 'string'],
+            'formats' => ['required', 'string'],
         ]);
 
         $user = User::create([
@@ -44,11 +44,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // フォーマットが選択されている場合は保存
-        if ($request->has('formats') && !empty($request->input('formats'))) {
-            $formatsArray = explode(',', $request->input('formats'));
-            $user->formats()->sync($formatsArray);
-        }
+        $formatsArray = explode(',', $request->input('formats'));
+        $user->formats()->sync($formatsArray);
 
         event(new Registered($user));
 
